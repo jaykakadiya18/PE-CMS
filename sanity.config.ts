@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'FE-CMS',
 
-  projectId: '5tmv8eg4',
+  projectId: '04138n8r',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
