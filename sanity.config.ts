@@ -15,4 +15,9 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
+
+  // ✅ Disable auto-update to prevent Vercel build prompt
+  unstable: {
+    autoUpdate: false,
+  },
 })
