@@ -1,3 +1,4 @@
+import {blockContent} from './blockContent'
 import { postType } from './postType'
 import asset from './asset'
 import academy from './academy'
@@ -7,7 +8,7 @@ import notice from './notice'
 import userOverride from './userOverride'
 import news from './news'
 import podcast from './podcast'
-export const schemaTypes = [postType, asset,
+export const schemaTypes = [postType, asset, blockContent,
     academy,
     legalDocument,
     banner,
