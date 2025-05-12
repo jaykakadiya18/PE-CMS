@@ -88,5 +88,12 @@ export default {
       type: 'boolean',
       description: 'True for public, false for private',
     },
+    {
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      initialValue: 'Needs Approval',
+      readOnly: true
+    },
   ],
 }
