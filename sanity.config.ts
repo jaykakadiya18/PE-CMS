@@ -17,7 +17,5 @@ export default defineConfig({
   },
 
   // ✅ Disable auto-update to prevent Vercel build prompt
-  unstable: {
-    autoUpdate: false,
-  },
+ unstable_noStudioAutoUpdates: true,
 })
