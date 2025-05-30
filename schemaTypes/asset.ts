@@ -3,14 +3,25 @@
 //   title: 'Asset',
 //   type: 'document',
 //   fields: [
-//     { name: 'title', type: 'string' },
-//     { name: 'description', type: 'text' },
-//     { name: 'foundingYear', type: 'number' },
-//     { name: 'valuation', type: 'number' },
-//     { name: 'sector', type: 'string' },
-//     { name: 'status', type: 'string', options: { list: ['Needs Approval', 'Published'] }},
+//     { name: 'companyName', title: 'Company Name', type: 'string' },
+//     { name: 'industrySector', title: 'Industry Sector', type: 'string' },
+//     { name: 'statusLabel', title: 'Status Label', type: 'string' },
+//     { name: 'foundedYear', title: 'Founded Year', type: 'number' },
+//     { name: 'headquartersLocation', title: 'Headquarters Location', type: 'string' },
+//     { name: 'numberOfEmployees', title: 'Number of Employees', type: 'number' },
+//     { name: 'latestValuation', title: 'Latest Valuation', type: 'string' }, // or 'number' if you parse "$1.00 billion"
+//     { name: 'investmentStatus', title: 'Investment Status', type: 'string' },
+//     { name: 'isPublic', title: 'Is Public', type: 'boolean' },
+//     {
+//       name: 'status',
+//       title: 'Status',
+//       type: 'string',
+//       options: {
+//         list: ['Needs Approval', 'Published'],
+//       },
+//     },
 //   ],
-// }
+// };
 
 
 export default {
@@ -24,16 +35,35 @@ export default {
     { name: 'foundedYear', title: 'Founded Year', type: 'number' },
     { name: 'headquartersLocation', title: 'Headquarters Location', type: 'string' },
     { name: 'numberOfEmployees', title: 'Number of Employees', type: 'number' },
-    { name: 'latestValuation', title: 'Latest Valuation', type: 'string' }, // or 'number' if you parse "$1.00 billion"
+    { name: 'latestValuation', title: 'Latest Valuation', type: 'string' },
     { name: 'investmentStatus', title: 'Investment Status', type: 'string' },
     { name: 'isPublic', title: 'Is Public', type: 'boolean' },
-    {
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      options: {
-        list: ['Needs Approval', 'Published'],
-      },
+    { name: 'status', title: 'Status', type: 'string' },
+    
+    // Optional extended fields for full coverage
+    { name: 'companyOverview', title: 'Company Overview', type: 'text' },
+    { name: 'website', title: 'Website', type: 'url' },
+    { name: 'market_type', title: 'Market Type', type: 'string' },
+    { name: 'logo_url', title: 'Logo URL', type: 'url' },
+    { 
+      name: 'management', 
+      title: 'Management Team', 
+      type: 'array', 
+      of: [{ type: 'string' }] 
     },
-  ],
-};
+    { 
+      name: 'valuation_records', 
+      title: 'Valuation Records', 
+      type: 'array', 
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'date', title: 'Date', type: 'string' },
+            { name: 'value', title: 'Value', type: 'number' }
+          ]
+        }
+      ]
+    }
+  ]
+}
