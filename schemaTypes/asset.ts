@@ -38,9 +38,6 @@ export default {
     { name: 'latestValuation', title: 'Latest Valuation', type: 'string' },
     { name: 'investmentStatus', title: 'Investment Status', type: 'string' },
     { name: 'isPublic', title: 'Is Public', type: 'boolean' },
-    { name: 'status', title: 'Status', type: 'string' },
-    
-    // Optional extended fields for full coverage
     { name: 'companyOverview', title: 'Company Overview', type: 'text' },
     { name: 'website', title: 'Website', type: 'url' },
     { name: 'market_type', title: 'Market Type', type: 'string' },
@@ -64,6 +61,7 @@ export default {
           ]
         }
       ]
-    }
+    },
+    { name: 'status', title: 'Status', type: 'string' }
   ]
 }
