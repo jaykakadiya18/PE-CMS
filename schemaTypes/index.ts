@@ -6,7 +6,7 @@ import legalDocument from './legalDocument'
 import banner from './banner'
 import notice from './notice'
 import userOverride from './userOverride'
-import news from './news'
+import newsArticle from './newsArticle'
 import podcast from './podcast'
 export const schemaTypes = [postType, asset, blockContent,
     academy,
@@ -14,7 +14,7 @@ export const schemaTypes = [postType, asset, blockContent,
     banner,
     notice,
     userOverride,
-    news,
+    newsArticle,
     podcast
 ]
 // export const schemaTypes = []
