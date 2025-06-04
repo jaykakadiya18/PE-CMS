@@ -20,9 +20,12 @@ export default {
       type: 'string'
     },
     {
-      name: 'iconUrl',
-      title: 'Icon URL',
-      type: 'url'
+      name: 'icon',
+      title: 'Icon',
+      type: 'image',
+      options: {
+        hotspot: true
+      }
     },
     {
       name: 'criteria',
