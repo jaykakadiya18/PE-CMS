@@ -1,5 +1,4 @@
-// 4. Asset Media Schema (media and documents)
-export const assetMediaSchema = {
+export default {
   name: 'assetMedia',
   title: 'Asset Media',
   type: 'document',
@@ -29,7 +28,6 @@ export const assetMediaSchema = {
       type: 'array',
       of: [{ type: 'file', options: { accept: '.pdf' } }]
     },
-    // Legacy support
     { name: 'logo_url', title: 'Logo URL (Legacy)', type: 'url' }
   ]
 };
