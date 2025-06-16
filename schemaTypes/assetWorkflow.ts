@@ -1,5 +1,4 @@
-// 5. Asset Workflow Schema (approvals, QA, etc.)
-export const assetWorkflowSchema = {
+export default {
   name: 'assetWorkflow',
   title: 'Asset Workflow',
   type: 'document',
