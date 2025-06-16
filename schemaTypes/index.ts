@@ -9,7 +9,23 @@ import notice from './notice'
 import userOverride from './userOverride'
 import newsArticle from './newsArticle'
 import podcast from './podcast'
-export const schemaTypes = [postType, asset, badge, blockContent,
+import asset from './asset'
+import companyProfile from './companyProfile'
+import tradingSettings from './tradingSettings'
+import assetMedia from './assetMedia'
+import assetWorkflow from './assetWorkflow'
+
+
+export const schemaTypes = [
+    assetSchema,
+    companyProfileSchema,
+    tradingSettingsSchema,
+    assetMediaSchema,
+    assetWorkflowSchema,
+    postType, 
+    asset, 
+    badge, 
+    blockContent,
     academy,
     legalDocument,
     banner,
