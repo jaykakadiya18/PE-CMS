@@ -43,8 +43,8 @@
 
 
 export default {
-  name: 'asset',
-  title: 'Asset',
+  name: 'assets',
+  title: 'Assets',
   type: 'document',
   fields: [
     // Basic Asset Information (merged from existing schema)
