@@ -1,5 +1,4 @@
-// 3. Trading Settings Schema (trading-specific configs)
-export const tradingSettingsSchema = {
+export default {
   name: 'tradingSettings',
   title: 'Trading Settings',
   type: 'document',
