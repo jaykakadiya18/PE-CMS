@@ -1,16 +1,14 @@
-// 1. Core Asset Schema (main document)
-export const assetSchema = {
+// schemas/asset.js
+export default {
   name: 'asset',
   title: 'Asset',
   type: 'document',
   fields: [
-    // Essential fields only
     { name: 'companyName', title: 'Company Name', type: 'string', validation: Rule => Rule.required() },
     { name: 'symbol', title: 'Asset Symbol/Ticker', type: 'string', validation: Rule => Rule.required() },
     { name: 'assetId', title: 'Asset ID', type: 'string', validation: Rule => Rule.required() },
     { name: 'companyOverview', title: 'Company Overview', type: 'text' },
     
-    // Status & Market
     {
       name: 'status',
       title: 'Asset Status',
@@ -39,16 +37,11 @@ export const assetSchema = {
       validation: Rule => Rule.required()
     },
     
-    // Core pricing
     { name: 'pricePerShare', title: 'Price Per Share', type: 'number', validation: Rule => Rule.required().min(0) },
     { name: 'availableVolume', title: 'Available Volume', type: 'number', validation: Rule => Rule.required().min(0) },
-    
-    // Controls
     { name: 'isVisible', title: 'Visible to Users', type: 'boolean', initialValue: false },
     { name: 'ctaEnabled', title: 'CTA Enabled', type: 'boolean', initialValue: false },
     { name: 'tradingEnabled', title: 'Trading Enabled', type: 'boolean', initialValue: false },
-    
-    // Client info
     { name: 'clientGroup', title: 'Client Group', type: 'string', options: { list: ['stapleton', 'rgi', 'other'] } },
     
     // References to other documents
