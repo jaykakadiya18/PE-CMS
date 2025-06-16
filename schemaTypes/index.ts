@@ -9,7 +9,7 @@ import notice from './notice'
 import userOverride from './userOverride'
 import newsArticle from './newsArticle'
 import podcast from './podcast'
-import asset from './asset'
+import assets from './assets'
 import companyProfile from './companyProfile'
 import tradingSettings from './tradingSettings'
 import assetMedia from './assetMedia'
@@ -17,13 +17,12 @@ import assetWorkflow from './assetWorkflow'
 
 
 export const schemaTypes = [
-    assetSchema,
-    companyProfileSchema,
-    tradingSettingsSchema,
-    assetMediaSchema,
-    assetWorkflowSchema,
-    postType, 
-    asset, 
+    asset,
+    companyProfile,
+    tradingSettings,
+    assetMedia,
+    assetWorkflow,
+    assets, 
     badge, 
     blockContent,
     academy,
