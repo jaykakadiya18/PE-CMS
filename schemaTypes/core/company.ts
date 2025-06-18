@@ -198,7 +198,7 @@ export default {
       status: 'status',
       media: 'media.companyLogo'
     },
-    prepare({ title, subtitle, status, media }) {
+    prepare({ title, subtitle, status, media }: { title: string; subtitle: string; status: string; media: any }) {
       return {
         title,
         subtitle: `${subtitle || 'No Symbol'} - ${status || 'No Status'}`,

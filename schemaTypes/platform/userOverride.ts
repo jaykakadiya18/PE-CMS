@@ -94,7 +94,7 @@ export default {
       title: 'userEmail',
       subtitle: 'accountStatus'
     },
-    prepare({ title, subtitle }) {
+    prepare({ title, subtitle }: { title: string; subtitle: string }) {
       return {
         title: title || 'Unknown User',
         subtitle: subtitle || 'No Status'

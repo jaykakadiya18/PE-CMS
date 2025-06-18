@@ -81,7 +81,7 @@ export default {
       subtitle: 'approvalStatus',
       entityId: 'entityId'
     },
-    prepare({ title, subtitle, entityId }) {
+    prepare({ title, subtitle, entityId }: { title: string; subtitle: string; entityId: string }) {
       return {
         title: `${title} - ${entityId}`,
         subtitle: subtitle
