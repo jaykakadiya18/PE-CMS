@@ -141,7 +141,7 @@ export default {
       type: 'datetime',
       group: 'primary',
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" mode. When date passes, you can manually change status.'
+      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
     },
     {
       name: 'primaryStatus',
@@ -159,19 +159,19 @@ export default {
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
       description: ({ document }: { document: any }) => {
         if (!document?.primaryCountdownTimer) {
-          return '✏️ Manual control - Select any status. CTA updates when you save.'
+          return '✏️ Manual control - Select any status'
         }
         
         const now = new Date()
         const countdown = new Date(document.primaryCountdownTimer)
         
         if (now < countdown) {
-          return '🔒 Auto-set to "Coming Soon" (countdown date is in future)'
+          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
         } else {
           return '🔓 Countdown passed - You can select any status'
         }
       },
-      // Auto-set to coming_soon if countdown is in future
+      // Auto-set to "coming_soon" if countdown is in future
       initialValue: ({ document }: { document: any }) => {
         if (!document?.primaryCountdownTimer) return undefined
         
@@ -192,26 +192,29 @@ export default {
     },
     {
       name: 'primaryCtaEnabled',
-      title: 'Primary CTA Status',
-      type: 'string',
+      title: 'Primary CTA Enabled',
+      type: 'boolean',
       group: 'primary',
+      initialValue: false,
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
       description: ({ document }: { document: any }) => {
         const status = document?.primaryStatus
-        return status === 'live' ? 
-          '✅ CTA will be ENABLED (Status: Live)' : 
-          '🔒 CTA will be DISABLED (Status not Live)'
-      },
-      options: {
-        list: [
-          { title: '✅ Enabled', value: 'enabled' },
-          { title: '🔒 Disabled', value: 'disabled' }
-        ]
+        
+        if (status === 'live') {
+          return '✅ Auto-enabled (Status: Live)'
+        } else if (status === 'coming_soon') {
+          return '🔒 Auto-disabled (Status: Coming Soon)'
+        } else if (status === 'closed') {
+          return '🔒 Auto-disabled (Status: Closed)'
+        } else {
+          return '⚙️ Auto-managed based on status'
+        }
       },
       // Auto-set based on status
       initialValue: ({ document }: { document: any }) => {
-        return document?.primaryStatus === 'live' ? 'enabled' : 'disabled'
+        return document?.primaryStatus === 'live'
       },
+      // Make read-only since it's auto-managed
       readOnly: true
     },
     {
@@ -294,7 +297,7 @@ export default {
       type: 'datetime',
       group: 'secondary',
       hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" mode. When date passes, you can manually change status.'
+      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
     },
     {
       name: 'secondaryStatus',
@@ -313,19 +316,19 @@ export default {
       hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
       description: ({ document }: { document: any }) => {
         if (!document?.secondaryCountdownTimer) {
-          return '✏️ Manual control - Select any status. CTA updates when you save.'
+          return '✏️ Manual control - Select any status'
         }
         
         const now = new Date()
         const countdown = new Date(document.secondaryCountdownTimer)
         
         if (now < countdown) {
-          return '🔒 Auto-set to "Coming Soon" (countdown date is in future)'
+          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
         } else {
           return '🔓 Countdown passed - You can select any status'
         }
       },
-      // Auto-set to coming_soon if countdown is in future
+      // Auto-set to "coming_soon" if countdown is in future
       initialValue: ({ document }: { document: any }) => {
         if (!document?.secondaryCountdownTimer) return undefined
         
@@ -346,26 +349,29 @@ export default {
     },
     {
       name: 'secondaryCtaEnabled',
-      title: 'Secondary CTA Status',
-      type: 'string',
+      title: 'Secondary CTA Enabled',
+      type: 'boolean',
       group: 'secondary',
+      initialValue: false,
       hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
       description: ({ document }: { document: any }) => {
         const status = document?.secondaryStatus
-        return status === 'live' ? 
-          '✅ CTA will be ENABLED (Status: Live)' : 
-          '🔒 CTA will be DISABLED (Status not Live)'
-      },
-      options: {
-        list: [
-          { title: '✅ Enabled', value: 'enabled' },
-          { title: '🔒 Disabled', value: 'disabled' }
-        ]
+        
+        if (status === 'live') {
+          return '✅ Auto-enabled (Status: Live)'
+        } else if (status === 'coming_soon') {
+          return '🔒 Auto-disabled (Status: Coming Soon)'
+        } else if (status === 'closed') {
+          return '🔒 Auto-disabled (Status: Closed)'
+        } else {
+          return '⚙️ Auto-managed based on status'
+        }
       },
       // Auto-set based on status
       initialValue: ({ document }: { document: any }) => {
-        return document?.secondaryStatus === 'live' ? 'enabled' : 'disabled'
+        return document?.secondaryStatus === 'live'
       },
+      // Make read-only since it's auto-managed
       readOnly: true
     },
     {
