@@ -136,6 +136,14 @@ export default {
       description: 'Enable primary market listings for this asset'
     },
     {
+      name: 'primaryCountdownTimer',
+      title: 'Primary Coming Soon Countdown',
+      type: 'datetime',
+      group: 'primary',
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
+    },
+    {
       name: 'primaryStatus',
       title: 'Primary Market Status',
       type: 'string',
@@ -149,8 +157,65 @@ export default {
         ]
       },
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      readOnly: true,
-      description: '⚠️ This field is automatically managed based on countdown timer and dates'
+      description: ({ document }: { document: any }) => {
+        if (!document?.primaryCountdownTimer) {
+          return '✏️ Manual control - Select any status'
+        }
+        
+        const now = new Date()
+        const countdown = new Date(document.primaryCountdownTimer)
+        
+        if (now < countdown) {
+          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
+        } else {
+          return '🔓 Countdown passed - You can select any status'
+        }
+      },
+      // Auto-set to "coming_soon" if countdown is in future
+      initialValue: ({ document }: { document: any }) => {
+        if (!document?.primaryCountdownTimer) return undefined
+        
+        const now = new Date()
+        const countdown = new Date(document.primaryCountdownTimer)
+        
+        return now < countdown ? 'coming_soon' : undefined
+      },
+      // Disable field if countdown is in future
+      readOnly: ({ document }: { document: any }) => {
+        if (!document?.primaryCountdownTimer) return false
+        
+        const now = new Date()
+        const countdown = new Date(document.primaryCountdownTimer)
+        
+        return now < countdown
+      }
+    },
+    {
+      name: 'primaryCtaEnabled',
+      title: 'Primary CTA Enabled',
+      type: 'boolean',
+      group: 'primary',
+      initialValue: false,
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      description: ({ document }: { document: any }) => {
+        const status = document?.primaryStatus
+        
+        if (status === 'live') {
+          return '✅ Auto-enabled (Status: Live)'
+        } else if (status === 'coming_soon') {
+          return '🔒 Auto-disabled (Status: Coming Soon)'
+        } else if (status === 'closed') {
+          return '🔒 Auto-disabled (Status: Closed)'
+        } else {
+          return '⚙️ Auto-managed based on status'
+        }
+      },
+      // Auto-set based on status
+      initialValue: ({ document }: { document: any }) => {
+        return document?.primaryStatus === 'live'
+      },
+      // Make read-only since it's auto-managed
+      readOnly: true
     },
     {
       name: 'primaryPricePerShare',
@@ -201,16 +266,6 @@ export default {
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
     },
     {
-      name: 'primaryCtaEnabled',
-      title: 'Primary CTA Enabled',
-      type: 'boolean',
-      group: 'primary',
-      initialValue: false,
-      description: '⚠️ This field is automatically managed based on market status',
-      readOnly: true,
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
-    },
-    {
       name: 'primaryOfferingStartDate',
       title: 'Primary Offering Start Date',
       type: 'datetime',
@@ -226,14 +281,6 @@ export default {
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
       description: 'When the primary offering closes'
     },
-    {
-      name: 'primaryCountdownTimer',
-      title: 'Primary Coming Soon Countdown',
-      type: 'datetime',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" → Auto changes to "Live" when reached'
-    },
 
     // ===== SECONDARY MARKET SECTION =====
     {
@@ -243,6 +290,14 @@ export default {
       group: 'secondary',
       initialValue: false,
       description: 'Enable secondary market trading for this asset'
+    },
+    {
+      name: 'secondaryCountdownTimer',
+      title: 'Secondary Coming Soon Countdown',
+      type: 'datetime',
+      group: 'secondary',
+      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
+      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
     },
     {
       name: 'secondaryStatus',
@@ -259,8 +314,38 @@ export default {
         ]
       },
       hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      readOnly: true,
-      description: '⚠️ This field is automatically managed based on countdown timer and dates'
+      description: ({ document }: { document: any }) => {
+        if (!document?.secondaryCountdownTimer) {
+          return '✏️ Manual control - Select any status'
+        }
+        
+        const now = new Date()
+        const countdown = new Date(document.secondaryCountdownTimer)
+        
+        if (now < countdown) {
+          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
+        } else {
+          return '🔓 Countdown passed - You can select any status'
+        }
+      },
+      // Auto-set to "coming_soon" if countdown is in future
+      initialValue: ({ document }: { document: any }) => {
+        if (!document?.secondaryCountdownTimer) return undefined
+        
+        const now = new Date()
+        const countdown = new Date(document.secondaryCountdownTimer)
+        
+        return now < countdown ? 'coming_soon' : undefined
+      },
+      // Disable field if countdown is in future
+      readOnly: ({ document }: { document: any }) => {
+        if (!document?.secondaryCountdownTimer) return false
+        
+        const now = new Date()
+        const countdown = new Date(document.secondaryCountdownTimer)
+        
+        return now < countdown
+      }
     },
     {
       name: 'secondaryCtaEnabled',
@@ -268,9 +353,26 @@ export default {
       type: 'boolean',
       group: 'secondary',
       initialValue: false,
-      description: '⚠️ This field is automatically managed based on market status',
-      readOnly: true,
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled
+      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
+      description: ({ document }: { document: any }) => {
+        const status = document?.secondaryStatus
+        
+        if (status === 'live') {
+          return '✅ Auto-enabled (Status: Live)'
+        } else if (status === 'coming_soon') {
+          return '🔒 Auto-disabled (Status: Coming Soon)'
+        } else if (status === 'closed') {
+          return '🔒 Auto-disabled (Status: Closed)'
+        } else {
+          return '⚙️ Auto-managed based on status'
+        }
+      },
+      // Auto-set based on status
+      initialValue: ({ document }: { document: any }) => {
+        return document?.secondaryStatus === 'live'
+      },
+      // Make read-only since it's auto-managed
+      readOnly: true
     },
     {
       name: 'ipoLockEnabled',
@@ -289,14 +391,6 @@ export default {
       hidden: ({ document }: { document: any }) => 
         !document?.secondaryMarketEnabled || !document?.ipoLockEnabled,
       description: 'When IPO lock expires and trading resumes'
-    },
-    {
-      name: 'secondaryCountdownTimer',
-      title: 'Secondary Coming Soon Countdown',
-      type: 'datetime',
-      group: 'secondary',
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" → Auto changes to "Live" when reached'
     },
     {
       name: 'corporateActions',
@@ -457,7 +551,7 @@ export default {
           ]
         }
       }],
-      description: 'Manually assigned tags for both markets (Closed tag auto-managed)'
+      description: 'Manually assigned tags for both markets'
     },
     {
       name: 'autoGeneratedTags',
@@ -466,7 +560,7 @@ export default {
       group: 'automation',
       of: [{ type: 'string' }],
       readOnly: true,
-      description: 'System generates these based on activity, recency, market performance, and status changes'
+      description: 'System generates these based on activity, recency, and market performance'
     },
     {
       name: 'primaryActivityLevel',
@@ -502,24 +596,6 @@ export default {
       type: 'datetime',
       group: 'automation',
       readOnly: true
-    },
-
-    // ===== AUTOMATION TRIGGER FIELDS =====
-    {
-      name: 'statusUpdateTrigger',
-      title: 'Status Update Trigger',
-      type: 'boolean',
-      group: 'automation',
-      hidden: true,
-      description: 'Internal field to trigger status updates via webhooks/automation'
-    },
-    {
-      name: 'lastStatusUpdate',
-      title: 'Last Status Update',
-      type: 'datetime',
-      group: 'automation',
-      readOnly: true,
-      description: 'When status was last automatically updated'
     },
 
     // ===== VISIBILITY & DISPLAY =====
