@@ -56,7 +56,19 @@ export default {
       name: 'sector',
       title: 'Sector',
       type: 'string',
-      group: 'basic'
+      group: 'basic',
+      options: {
+        list: [
+          { title: 'Tech', value: 'tech' },
+          { title: 'Finance', value: 'finance' },
+          { title: 'AI/ML', value: 'ai_ml' },
+          { title: 'Healthcare', value: 'healthcare' },
+          { title: 'Green Energy', value: 'green_energy' },
+          { title: 'SaaS', value: 'saas' },
+          { title: 'Space', value: 'space' }
+        ]
+      },
+      validation: (Rule: any) => Rule.required()
     },
     {
       name: 'industry',
@@ -136,7 +148,9 @@ export default {
           { title: 'Closed', value: 'closed' }
         ]
       },
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      readOnly: true,
+      description: '⚠️ This field is automatically managed based on countdown timer and dates'
     },
     {
       name: 'primaryPricePerShare',
@@ -192,7 +206,8 @@ export default {
       type: 'boolean',
       group: 'primary',
       initialValue: false,
-      description: 'Enable buy/invest button for primary market',
+      description: '⚠️ This field is automatically managed based on market status',
+      readOnly: true,
       hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
     },
     {
@@ -200,23 +215,24 @@ export default {
       title: 'Primary Offering Start Date',
       type: 'datetime',
       group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      description: 'When the primary offering becomes active'
     },
     {
       name: 'primaryOfferingEndDate',
       title: 'Primary Offering End Date',
       type: 'datetime',
       group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      description: 'When the primary offering closes'
     },
     {
       name: 'primaryCountdownTimer',
       title: 'Primary Coming Soon Countdown',
       type: 'datetime',
       group: 'primary',
-      hidden: ({ document }: { document: any }) => 
-        !document?.primaryMarketEnabled || document?.primaryStatus !== 'coming_soon',
-      description: 'Countdown timer for coming soon primary offerings'
+      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
+      description: '🕒 Set future date for "Coming Soon" → Auto changes to "Live" when reached'
     },
 
     // ===== SECONDARY MARKET SECTION =====
@@ -238,10 +254,13 @@ export default {
           { title: 'Live', value: 'live' },
           { title: 'Paused', value: 'paused' },
           { title: 'IPO Locked', value: 'ipo_locked' },
-          { title: 'Closed', value: 'closed' }
+          { title: 'Closed', value: 'closed' },
+          { title: 'Coming Soon', value: 'coming_soon' }
         ]
       },
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled
+      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
+      readOnly: true,
+      description: '⚠️ This field is automatically managed based on countdown timer and dates'
     },
     {
       name: 'secondaryCtaEnabled',
@@ -249,7 +268,8 @@ export default {
       type: 'boolean',
       group: 'secondary',
       initialValue: false,
-      description: 'Enable trade button for secondary market',
+      description: '⚠️ This field is automatically managed based on market status',
+      readOnly: true,
       hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled
     },
     {
@@ -269,6 +289,14 @@ export default {
       hidden: ({ document }: { document: any }) => 
         !document?.secondaryMarketEnabled || !document?.ipoLockEnabled,
       description: 'When IPO lock expires and trading resumes'
+    },
+    {
+      name: 'secondaryCountdownTimer',
+      title: 'Secondary Coming Soon Countdown',
+      type: 'datetime',
+      group: 'secondary',
+      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
+      description: '🕒 Set future date for "Coming Soon" → Auto changes to "Live" when reached'
     },
     {
       name: 'corporateActions',
@@ -424,11 +452,12 @@ export default {
             { title: 'Limited Time', value: 'limited_time' },
             { title: 'Exclusive', value: 'exclusive' },
             { title: 'Hot', value: 'hot' },
-            { title: 'Trending', value: 'trending' }
+            { title: 'Trending', value: 'trending' },
+            { title: 'Closed', value: 'closed' }
           ]
         }
       }],
-      description: 'Manually assigned tags for both markets'
+      description: 'Manually assigned tags for both markets (Closed tag auto-managed)'
     },
     {
       name: 'autoGeneratedTags',
@@ -437,7 +466,7 @@ export default {
       group: 'automation',
       of: [{ type: 'string' }],
       readOnly: true,
-      description: 'System generates these based on activity, recency, and market performance'
+      description: 'System generates these based on activity, recency, market performance, and status changes'
     },
     {
       name: 'primaryActivityLevel',
@@ -473,6 +502,24 @@ export default {
       type: 'datetime',
       group: 'automation',
       readOnly: true
+    },
+
+    // ===== AUTOMATION TRIGGER FIELDS =====
+    {
+      name: 'statusUpdateTrigger',
+      title: 'Status Update Trigger',
+      type: 'boolean',
+      group: 'automation',
+      hidden: true,
+      description: 'Internal field to trigger status updates via webhooks/automation'
+    },
+    {
+      name: 'lastStatusUpdate',
+      title: 'Last Status Update',
+      type: 'datetime',
+      group: 'automation',
+      readOnly: true,
+      description: 'When status was last automatically updated'
     },
 
     // ===== VISIBILITY & DISPLAY =====
@@ -667,13 +714,15 @@ export default {
       secondaryStatus: 'secondaryStatus',
       marketType: 'marketType',
       clientGroup: 'clientGroup',
+      sector: 'sector',
       media: 'media.companyLogo'
     },
-    prepare({ title, subtitle, primaryStatus, secondaryStatus, marketType, clientGroup, media }: { 
-      title: any; subtitle: any; primaryStatus: any; secondaryStatus: any; marketType: any; clientGroup: any; media: any 
+    prepare({ title, subtitle, primaryStatus, secondaryStatus, marketType, clientGroup, sector, media }: { 
+      title: any; subtitle: any; primaryStatus: any; secondaryStatus: any; marketType: any; clientGroup: any; sector: any; media: any 
     }) {
       const symbolDisplay = subtitle ? ` (${subtitle})` : '';
       const clientDisplay = clientGroup || 'No Client';
+      const sectorDisplay = sector ? ` • ${sector}` : '';
       
       let statusDisplay = '';
       if (marketType === 'primary' && primaryStatus) {
@@ -688,7 +737,7 @@ export default {
       
       return {
         title: `${title}${symbolDisplay}`,
-        subtitle: `${clientDisplay} • ${statusDisplay || 'No Status'}`,
+        subtitle: `${clientDisplay}${sectorDisplay} • ${statusDisplay || 'No Status'}`,
         media
       }
     }
@@ -725,6 +774,14 @@ export default {
       name: 'clientGroup',
       by: [
         { field: 'clientGroup', direction: 'asc' },
+        { field: 'companyName', direction: 'asc' }
+      ]
+    },
+    {
+      title: 'Sector',
+      name: 'sector',
+      by: [
+        { field: 'sector', direction: 'asc' },
         { field: 'companyName', direction: 'asc' }
       ]
     },
