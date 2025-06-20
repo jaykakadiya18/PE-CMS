@@ -90,8 +90,6 @@ export default {
       },
       validation: (Rule: any) => Rule.required()
     },
-
-    // ===== MARKET AVAILABILITY =====
     {
       name: 'marketType',
       title: 'Available Markets',
@@ -104,11 +102,30 @@ export default {
           { title: 'Both Primary & Secondary', value: 'both' }
         ]
       },
-      validation: (Rule: any) => Rule.required(),
-      description: 'Controls which markets this asset appears in'
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      name: 'isVisible',
+      title: 'Visible to Users',
+      type: 'boolean',
+      group: 'basic',
+      initialValue: false
+    },
+    {
+      name: 'isFeatured',
+      title: 'Featured Asset',
+      type: 'boolean',
+      group: 'basic',
+      initialValue: false
+    },
+    {
+      name: 'scheduledPublishTime',
+      title: 'Scheduled Publish Time',
+      type: 'datetime',
+      group: 'basic'
     },
 
-    // ===== GENERAL FINANCIAL =====
+    // ===== FINANCIAL =====
     {
       name: 'valuationCurrency',
       title: 'Valuation Currency',
@@ -125,23 +142,33 @@ export default {
       type: 'number',
       group: 'financial'
     },
+    {
+      name: 'assetType',
+      title: 'Asset Type',
+      type: 'string',
+      group: 'financial',
+      options: {
+        list: [
+          { title: 'Equity', value: 'equity' },
+          { title: 'Debt', value: 'debt' },
+          { title: 'Hybrid', value: 'hybrid' }
+        ]
+      }
+    },
 
-    // ===== PRIMARY MARKET SECTION =====
+    // ===== PRIMARY MARKET =====
     {
       name: 'primaryMarketEnabled',
       title: 'Primary Market Enabled',
       type: 'boolean',
       group: 'primary',
-      initialValue: false,
-      description: 'Enable primary market listings for this asset'
+      initialValue: false
     },
     {
       name: 'primaryCountdownTimer',
       title: 'Primary Coming Soon Countdown',
       type: 'datetime',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
+      group: 'primary'
     },
     {
       name: 'primaryStatus',
@@ -155,39 +182,6 @@ export default {
           { title: 'Coming Soon', value: 'coming_soon' },
           { title: 'Closed', value: 'closed' }
         ]
-      },
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: ({ document }: { document: any }) => {
-        if (!document?.primaryCountdownTimer) {
-          return '✏️ Manual control - Select any status'
-        }
-        
-        const now = new Date()
-        const countdown = new Date(document.primaryCountdownTimer)
-        
-        if (now < countdown) {
-          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
-        } else {
-          return '🔓 Countdown passed - You can select any status'
-        }
-      },
-      // Auto-set to "coming_soon" if countdown is in future
-      initialValue: ({ document }: { document: any }) => {
-        if (!document?.primaryCountdownTimer) return undefined
-        
-        const now = new Date()
-        const countdown = new Date(document.primaryCountdownTimer)
-        
-        return now < countdown ? 'coming_soon' : undefined
-      },
-      // Disable field if countdown is in future
-      readOnly: ({ document }: { document: any }) => {
-        if (!document?.primaryCountdownTimer) return false
-        
-        const now = new Date()
-        const countdown = new Date(document.primaryCountdownTimer)
-        
-        return now < countdown
       }
     },
     {
@@ -195,109 +189,73 @@ export default {
       title: 'Primary CTA Enabled',
       type: 'boolean',
       group: 'primary',
-      initialValue: false,
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: ({ document }: { document: any }) => {
-        const status = document?.primaryStatus
-        
-        if (status === 'live') {
-          return '✅ Auto-enabled (Status: Live)'
-        } else if (status === 'coming_soon') {
-          return '🔒 Auto-disabled (Status: Coming Soon)'
-        } else if (status === 'closed') {
-          return '🔒 Auto-disabled (Status: Closed)'
-        } else {
-          return '⚙️ Auto-managed based on status'
-        }
-      },
-      // Auto-set based on status
-      initialValue: ({ document }: { document: any }) => {
-        return document?.primaryStatus === 'live'
-      },
-      // Make read-only since it's auto-managed
-      readOnly: true
+      initialValue: false
     },
     {
       name: 'primaryPricePerShare',
       title: 'Primary Market Price Per Share',
       type: 'number',
       group: 'primary',
-      validation: (Rule: any) => Rule.min(0),
-      description: 'Public-facing price',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      validation: (Rule: any) => Rule.min(0)
     },
     {
       name: 'primaryInternalPrice',
       title: 'Primary Market Internal Price',
       type: 'number',
       group: 'primary',
-      validation: (Rule: any) => Rule.min(0),
-      description: 'Internal platform price (admin only)',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      validation: (Rule: any) => Rule.min(0)
     },
     {
       name: 'totalSharesOffered',
       title: 'Total Shares Offered (Primary)',
       type: 'number',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      group: 'primary'
     },
     {
       name: 'sharesRemaining',
       title: 'Shares Remaining (Primary)',
       type: 'number',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      group: 'primary'
     },
     {
       name: 'minInvestmentShares',
       title: 'Minimum Investment Shares (Primary)',
       type: 'number',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      group: 'primary'
     },
     {
       name: 'fundingProgress',
       title: 'Funding Progress',
       type: 'number',
       group: 'primary',
-      description: 'Percentage (0-100) or absolute value',
-      validation: (Rule: any) => Rule.min(0).max(100),
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled
+      validation: (Rule: any) => Rule.min(0).max(100)
     },
     {
       name: 'primaryOfferingStartDate',
       title: 'Primary Offering Start Date',
       type: 'datetime',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: 'When the primary offering becomes active'
+      group: 'primary'
     },
     {
       name: 'primaryOfferingEndDate',
       title: 'Primary Offering End Date',
       type: 'datetime',
-      group: 'primary',
-      hidden: ({ document }: { document: any }) => !document?.primaryMarketEnabled,
-      description: 'When the primary offering closes'
+      group: 'primary'
     },
 
-    // ===== SECONDARY MARKET SECTION =====
+    // ===== SECONDARY MARKET =====
     {
       name: 'secondaryMarketEnabled',
       title: 'Secondary Market Enabled',
       type: 'boolean',
       group: 'secondary',
-      initialValue: false,
-      description: 'Enable secondary market trading for this asset'
+      initialValue: false
     },
     {
       name: 'secondaryCountdownTimer',
       title: 'Secondary Coming Soon Countdown',
       type: 'datetime',
-      group: 'secondary',
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      description: '🕒 Set future date for "Coming Soon" mode. Leave empty for manual status control.'
+      group: 'secondary'
     },
     {
       name: 'secondaryStatus',
@@ -312,39 +270,6 @@ export default {
           { title: 'Closed', value: 'closed' },
           { title: 'Coming Soon', value: 'coming_soon' }
         ]
-      },
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      description: ({ document }: { document: any }) => {
-        if (!document?.secondaryCountdownTimer) {
-          return '✏️ Manual control - Select any status'
-        }
-        
-        const now = new Date()
-        const countdown = new Date(document.secondaryCountdownTimer)
-        
-        if (now < countdown) {
-          return '🔒 Auto-set to "Coming Soon" (future countdown date)'
-        } else {
-          return '🔓 Countdown passed - You can select any status'
-        }
-      },
-      // Auto-set to "coming_soon" if countdown is in future
-      initialValue: ({ document }: { document: any }) => {
-        if (!document?.secondaryCountdownTimer) return undefined
-        
-        const now = new Date()
-        const countdown = new Date(document.secondaryCountdownTimer)
-        
-        return now < countdown ? 'coming_soon' : undefined
-      },
-      // Disable field if countdown is in future
-      readOnly: ({ document }: { document: any }) => {
-        if (!document?.secondaryCountdownTimer) return false
-        
-        const now = new Date()
-        const countdown = new Date(document.secondaryCountdownTimer)
-        
-        return now < countdown
       }
     },
     {
@@ -352,45 +277,20 @@ export default {
       title: 'Secondary CTA Enabled',
       type: 'boolean',
       group: 'secondary',
-      initialValue: false,
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled,
-      description: ({ document }: { document: any }) => {
-        const status = document?.secondaryStatus
-        
-        if (status === 'live') {
-          return '✅ Auto-enabled (Status: Live)'
-        } else if (status === 'coming_soon') {
-          return '🔒 Auto-disabled (Status: Coming Soon)'
-        } else if (status === 'closed') {
-          return '🔒 Auto-disabled (Status: Closed)'
-        } else {
-          return '⚙️ Auto-managed based on status'
-        }
-      },
-      // Auto-set based on status
-      initialValue: ({ document }: { document: any }) => {
-        return document?.secondaryStatus === 'live'
-      },
-      // Make read-only since it's auto-managed
-      readOnly: true
+      initialValue: false
     },
     {
       name: 'ipoLockEnabled',
       title: 'IPO Lock Enabled',
       type: 'boolean',
       group: 'secondary',
-      initialValue: false,
-      description: 'Lock trading during IPO period',
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled
+      initialValue: false
     },
     {
       name: 'ipoLockCountdown',
       title: 'IPO Lock Countdown',
       type: 'datetime',
-      group: 'secondary',
-      hidden: ({ document }: { document: any }) => 
-        !document?.secondaryMarketEnabled || !document?.ipoLockEnabled,
-      description: 'When IPO lock expires and trading resumes'
+      group: 'secondary'
     },
     {
       name: 'corporateActions',
@@ -418,10 +318,7 @@ export default {
           {
             name: 'ratio',
             title: 'Split Ratio',
-            type: 'string',
-            description: 'e.g., "2:1" for 2-for-1 split',
-            hidden: ({ parent }: { parent: any }) => 
-              !['split', 'reverse_split'].includes(parent?.actionType)
+            type: 'string'
           },
           {
             name: 'effectiveDate',
@@ -434,11 +331,10 @@ export default {
             type: 'text'
           }
         ]
-      }],
-      hidden: ({ document }: { document: any }) => !document?.secondaryMarketEnabled
+      }]
     },
 
-    // ===== SHARE TRANCHE MANAGEMENT =====
+    // ===== SHARE TRANCHES =====
     {
       name: 'shareTranches',
       title: 'Share Tranche History',
@@ -508,29 +404,13 @@ export default {
           {
             name: 'terms',
             title: 'Tranche Terms',
-            type: 'text',
-            description: 'Special terms for this tranche'
+            type: 'text'
           }
-        ],
-        preview: {
-          select: {
-            title: 'trancheId',
-            subtitle: 'marketType',
-            quantity: 'quantity',
-            price: 'publicPricePerShare'
-          },
-          prepare({ title, subtitle, quantity, price }: { title: any; subtitle: any; quantity: any; price: any }) {
-            return {
-              title: `${title} (${subtitle})`,
-              subtitle: `${quantity} shares @ $${price}`
-            }
-          }
-        }
-      }],
-      description: 'Track multiple share offerings and tranches across both markets'
+        ]
+      }]
     },
 
-    // ===== TAGS & AUTOMATION =====
+    // ===== AUTOMATION & TAGS =====
     {
       name: 'manualTags',
       title: 'Manual Tags',
@@ -550,8 +430,7 @@ export default {
             { title: 'Closed', value: 'closed' }
           ]
         }
-      }],
-      description: 'Manually assigned tags for both markets'
+      }]
     },
     {
       name: 'autoGeneratedTags',
@@ -559,8 +438,7 @@ export default {
       type: 'array',
       group: 'automation',
       of: [{ type: 'string' }],
-      readOnly: true,
-      description: 'System generates these based on activity, recency, and market performance'
+      readOnly: true
     },
     {
       name: 'primaryActivityLevel',
@@ -573,8 +451,7 @@ export default {
           { title: 'Medium', value: 'medium' },
           { title: 'High', value: 'high' }
         ]
-      },
-      description: 'Used for auto-generating Hot tags in primary market'
+      }
     },
     {
       name: 'secondaryActivityLevel',
@@ -587,8 +464,7 @@ export default {
           { title: 'Medium', value: 'medium' },
           { title: 'High', value: 'high' }
         ]
-      },
-      description: 'Used for auto-generating Hot/Trending tags in secondary market'
+      }
     },
     {
       name: 'lastActivityDate',
@@ -596,44 +472,6 @@ export default {
       type: 'datetime',
       group: 'automation',
       readOnly: true
-    },
-
-    // ===== VISIBILITY & DISPLAY =====
-    {
-      name: 'isVisible',
-      title: 'Visible to Users',
-      type: 'boolean',
-      group: 'basic',
-      initialValue: false
-    },
-    {
-      name: 'isFeatured',
-      title: 'Featured Asset',
-      type: 'boolean',
-      group: 'basic',
-      initialValue: false
-    },
-    {
-      name: 'scheduledPublishTime',
-      title: 'Scheduled Publish Time',
-      type: 'datetime',
-      group: 'basic',
-      description: 'When this asset becomes visible'
-    },
-
-    // ===== ASSET TYPE =====
-    {
-      name: 'assetType',
-      title: 'Asset Type',
-      type: 'string',
-      group: 'financial',
-      options: {
-        list: [
-          { title: 'Equity', value: 'equity' },
-          { title: 'Debt', value: 'debt' },
-          { title: 'Hybrid', value: 'hybrid' }
-        ]
-      }
     },
 
     // ===== CONTENT & MEDIA =====
@@ -670,8 +508,7 @@ export default {
             name: 'generatedAt',
             title: 'Generated Date',
             type: 'datetime',
-            readOnly: true,
-            hidden: ({ parent }: { parent: any }) => !parent?.isAutoGenerated
+            readOnly: true
           },
           {
             name: 'displayOrder',
@@ -679,21 +516,8 @@ export default {
             type: 'number',
             initialValue: 1
           }
-        ],
-        preview: {
-          select: {
-            title: 'question',
-            isAuto: 'isAutoGenerated'
-          },
-          prepare({ title, isAuto }: { title: any; isAuto: any }) {
-            return {
-              title: title,
-              subtitle: isAuto ? '🤖 Auto-generated' : '✏️ Manual'
-            }
-          }
-        }
-      }],
-      description: 'Auto-generates 4 FAQs per company, editable manually'
+        ]
+      }]
     },
     {
       name: 'media',
@@ -710,8 +534,7 @@ export default {
       type: 'array',
       group: 'workflow',
       of: [{ type: 'string' }],
-      readOnly: true,
-      description: 'System-generated validation issues'
+      readOnly: true
     },
     {
       name: 'qaChecked',
@@ -778,101 +601,6 @@ export default {
       title: 'Approval Date',
       type: 'datetime',
       group: 'workflow'
-    }
-  ],
-
-  // ===== PREVIEW CONFIGURATION =====
-  preview: {
-    select: {
-      title: 'companyName',
-      subtitle: 'tickerSymbol',
-      primaryStatus: 'primaryStatus',
-      secondaryStatus: 'secondaryStatus',
-      marketType: 'marketType',
-      clientGroup: 'clientGroup',
-      sector: 'sector',
-      media: 'media.companyLogo'
-    },
-    prepare({ title, subtitle, primaryStatus, secondaryStatus, marketType, clientGroup, sector, media }: { 
-      title: any; subtitle: any; primaryStatus: any; secondaryStatus: any; marketType: any; clientGroup: any; sector: any; media: any 
-    }) {
-      const symbolDisplay = subtitle ? ` (${subtitle})` : '';
-      const clientDisplay = clientGroup || 'No Client';
-      const sectorDisplay = sector ? ` • ${sector}` : '';
-      
-      let statusDisplay = '';
-      if (marketType === 'primary' && primaryStatus) {
-        statusDisplay = `Primary: ${primaryStatus}`;
-      } else if (marketType === 'secondary' && secondaryStatus) {
-        statusDisplay = `Secondary: ${secondaryStatus}`;
-      } else if (marketType === 'both') {
-        const pStatus = primaryStatus ? `P:${primaryStatus}` : '';
-        const sStatus = secondaryStatus ? `S:${secondaryStatus}` : '';
-        statusDisplay = [pStatus, sStatus].filter(Boolean).join(' | ');
-      }
-      
-      return {
-        title: `${title}${symbolDisplay}`,
-        subtitle: `${clientDisplay}${sectorDisplay} • ${statusDisplay || 'No Status'}`,
-        media
-      }
-    }
-  },
-
-  // ===== ORDERINGS =====
-  orderings: [
-    {
-      title: 'Primary Market Status',
-      name: 'primaryStatus',
-      by: [
-        { field: 'primaryStatus', direction: 'asc' },
-        { field: 'companyName', direction: 'asc' }
-      ]
-    },
-    {
-      title: 'Secondary Market Status',
-      name: 'secondaryStatus',
-      by: [
-        { field: 'secondaryStatus', direction: 'asc' },
-        { field: 'companyName', direction: 'asc' }
-      ]
-    },
-    {
-      title: 'Market Type',
-      name: 'marketType',
-      by: [
-        { field: 'marketType', direction: 'asc' },
-        { field: 'companyName', direction: 'asc' }
-      ]
-    },
-    {
-      title: 'Client Group',
-      name: 'clientGroup',
-      by: [
-        { field: 'clientGroup', direction: 'asc' },
-        { field: 'companyName', direction: 'asc' }
-      ]
-    },
-    {
-      title: 'Sector',
-      name: 'sector',
-      by: [
-        { field: 'sector', direction: 'asc' },
-        { field: 'companyName', direction: 'asc' }
-      ]
-    },
-    {
-      title: 'Last Modified',
-      name: 'lastModified',
-      by: [{ field: '_updatedAt', direction: 'desc' }]
-    },
-    {
-      title: 'Approval Status',
-      name: 'approvalStatus',
-      by: [
-        { field: 'approvalStatus', direction: 'asc' },
-        { field: '_updatedAt', direction: 'desc' }
-      ]
     }
   ]
 }
