@@ -1,6 +1,6 @@
 export default {
-  name: 'Company Workflow',
-  title: 'Company Workflow',
+  name: 'companyWorkflow',
+  title: 'companyWorkflow',
   type: 'document',
   fields: [
     {
