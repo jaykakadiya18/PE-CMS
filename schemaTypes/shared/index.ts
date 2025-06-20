@@ -4,5 +4,5 @@ import workflow from './workflow'
 import assetUpload from './assetUpload'
 import companyWorkflow from './companyWorkflow'
 
-export { blockContent, companyMedia, workflow, assetUpload }
-export const sharedSchemas = [blockContent, companyMedia, workflow, assetUpload]
+export { blockContent, companyMedia, workflow, assetUpload, companyWorkflow }
+export const sharedSchemas = [blockContent, companyMedia, workflow, assetUpload, companyWorkflow]
