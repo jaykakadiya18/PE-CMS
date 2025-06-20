@@ -35,6 +35,27 @@ export default {
       group: 'basic'
     },
     {
+      name: 'title',
+      title: 'Page Title',
+      type: 'string',
+      group: 'basic',
+      description: 'SEO-friendly title for the company page'
+    },
+    {
+      name: 'slug',
+      title: 'URL Slug',
+      type: 'slug',
+      group: 'basic',
+      options: { source: 'companyName', maxLength: 96 },
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      name: 'website',
+      title: 'Company Website',
+      type: 'url',
+      group: 'basic'
+    },
+    {
       name: 'isin',
       title: 'ISIN',
       type: 'string',
@@ -53,6 +74,69 @@ export default {
       group: 'basic'
     },
     {
+      name: 'companyOverview',
+      title: 'Company Overview',
+      type: 'text',
+      group: 'basic',
+      description: 'Plain text overview for API/display purposes'
+    },
+    {
+      name: 'yearFounded',
+      title: 'Year Founded',
+      type: 'string',
+      group: 'basic'
+    },
+    {
+      name: 'headquarters',
+      title: 'Headquarters',
+      type: 'string',
+      group: 'basic'
+    },
+    {
+      name: 'numberOfEmployees',
+      title: 'Number of Employees',
+      type: 'number',
+      group: 'basic',
+      validation: (Rule: any) => Rule.min(0)
+    },
+    {
+      name: 'isPublic',
+      title: 'Public Company',
+      type: 'boolean',
+      group: 'basic',
+      initialValue: false,
+      description: 'Is this a publicly traded company?'
+    },
+    {
+      name: 'statusLabel',
+      title: 'Status Label',
+      type: 'string',
+      group: 'basic',
+      options: {
+        list: [
+          { title: 'Live', value: 'live' },
+          { title: 'Upcoming', value: 'upcoming' },
+          { title: 'Closed', value: 'closed' },
+          { title: 'Paused', value: 'paused' },
+          { title: 'Coming Soon', value: 'coming_soon' }
+        ]
+      }
+    },
+    {
+      name: 'investmentStatus',
+      title: 'Investment Status',
+      type: 'string',
+      group: 'basic',
+      options: {
+        list: [
+          { title: 'Live', value: 'live' },
+          { title: 'Closed', value: 'closed' },
+          { title: 'Paused', value: 'paused' },
+          { title: 'Coming Soon', value: 'coming_soon' }
+        ]
+      }
+    },
+    {
       name: 'sector',
       title: 'Sector',
       type: 'string',
@@ -65,16 +149,27 @@ export default {
           { title: 'Healthcare', value: 'healthcare' },
           { title: 'Green Energy', value: 'green_energy' },
           { title: 'SaaS', value: 'saas' },
-          { title: 'Space', value: 'space' }
+          { title: 'Space', value: 'space' },
+          { title: 'AI', value: 'ai' },
+          { title: 'Software', value: 'software' }
         ]
       },
       validation: (Rule: any) => Rule.required()
     },
     {
+      name: 'industrySector',
+      title: 'Industry Sector',
+      type: 'string',
+      group: 'basic',
+      description: 'Free-form industry sector field'
+    },
+    {
       name: 'industry',
       title: 'Industry',
-      type: 'string',
-      group: 'basic'
+      type: 'array',
+      group: 'basic',
+      of: [{ type: 'string' }],
+      description: 'Multiple industry categories'
     },
     {
       name: 'clientGroup',
@@ -99,7 +194,8 @@ export default {
         list: [
           { title: 'Primary Market Only', value: 'primary' },
           { title: 'Secondary Market Only', value: 'secondary' },
-          { title: 'Both Primary & Secondary', value: 'both' }
+          { title: 'Both Primary & Secondary', value: 'both' },
+          { title: 'Private Investment', value: 'PI' }
         ]
       },
       validation: (Rule: any) => Rule.required(),
@@ -144,6 +240,55 @@ export default {
       title: 'Latest Company Valuation',
       type: 'number',
       group: 'financial'
+    },
+    {
+      name: 'valuation',
+      title: 'Current Valuation Display',
+      type: 'array',
+      group: 'financial',
+      of: [{ type: 'string' }],
+      description: 'Array of valuation strings for display (e.g., ["$862.80 million", "$1.00 billion"])'
+    },
+    {
+      name: 'valuationRecords',
+      title: 'Valuation History',
+      type: 'array',
+      group: 'financial',
+      of: [{
+        type: 'object',
+        name: 'valuationRecord',
+        title: 'Valuation Record',
+        fields: [
+          {
+            name: 'date',
+            title: 'Valuation Date',
+            type: 'string',
+            validation: (Rule: any) => Rule.required()
+          },
+          {
+            name: 'value',
+            title: 'Valuation Amount',
+            type: 'number',
+            validation: (Rule: any) => Rule.required().min(0)
+          },
+          {
+            name: 'currency',
+            title: 'Currency',
+            type: 'string',
+            options: {
+              list: ['USD', 'EUR', 'GBP', 'INR']
+            },
+            initialValue: 'USD'
+          },
+          {
+            name: 'source',
+            title: 'Source',
+            type: 'string',
+            description: 'Source of this valuation data'
+          }
+        ]
+      }],
+      description: 'Historical valuation records with dates and amounts'
     },
     {
       name: 'assetType',
@@ -608,6 +753,73 @@ export default {
     },
 
     // ===== CONTENT & MEDIA =====
+    {
+      name: 'logo',
+      title: 'Logo URL',
+      type: 'url',
+      group: 'content',
+      description: 'Direct URL to company logo'
+    },
+    {
+      name: 'logoUrl',
+      title: 'Alternative Logo URL',
+      type: 'url',
+      group: 'content',
+      description: 'Alternative logo URL field'
+    },
+    {
+      name: 'management',
+      title: 'Management Team',
+      type: 'array',
+      group: 'content',
+      of: [{
+        type: 'object',
+        name: 'managementMember',
+        title: 'Management Member',
+        fields: [
+          {
+            name: 'name',
+            title: 'Name',
+            type: 'string',
+            validation: (Rule: any) => Rule.required()
+          },
+          {
+            name: 'position',
+            title: 'Position/Title',
+            type: 'string',
+            validation: (Rule: any) => Rule.required()
+          },
+          {
+            name: 'bio',
+            title: 'Biography',
+            type: 'text'
+          },
+          {
+            name: 'image',
+            title: 'Profile Image',
+            type: 'image',
+            options: { hotspot: true }
+          },
+          {
+            name: 'linkedin',
+            title: 'LinkedIn URL',
+            type: 'url'
+          }
+        ]
+      }],
+      description: 'Company leadership and management team'
+    },
+    {
+      name: 'news',
+      title: 'Company News',
+      type: 'array',
+      group: 'content',
+      of: [{
+        type: 'reference',
+        to: [{ type: 'newsArticle' }]
+      }],
+      description: 'Related news articles about this company'
+    },
     {
       name: 'faqs',
       title: 'FAQs',
