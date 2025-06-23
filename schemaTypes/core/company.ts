@@ -411,27 +411,32 @@ export default {
       title: 'Available Shares (auto-adjusted)',
       type: 'number',
       group: 'primary',
-      readOnly: true,
+      validation: (Rule: any) => Rule.min(0),
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Automatically calculated: Total Shares - Shares Sold'
+      description: 'Auto-calculated: Total Shares - Shares Sold. Can be manually edited.',
+      initialValue: ({ document }: any) => {
+        const total = document?.totalShares || 0;
+        const sold = document?.sharesSold || 0;
+        return total - sold;
+      }
     },
     {
       name: 'sharesSold',
       title: 'Shares Sold (auto-adjusted)',
       type: 'number',
       group: 'primary',
-      readOnly: true,
+      validation: (Rule: any) => Rule.min(0),
       initialValue: 0,
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Automatically calculated from completed transactions'
+      description: 'Auto-calculated: Total Shares - Available Shares. Can be manually edited.'
     },
     {
       name: 'minInvestmentShares',
