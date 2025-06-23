@@ -16,10 +16,18 @@ export default {
     // ===== BASIC INFORMATION =====
     {
       name: 'assetId',
-      title: 'Asset ID',
+      title: 'Company ID (Auto-generated)',
       type: 'string',
       group: 'basic',
-      validation: (Rule: any) => Rule.required()
+      readOnly: true,
+      initialValue: () => {
+        // Generate a unique ID with timestamp and random string
+        const timestamp = Date.now();
+        const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
+        return `COMP-${timestamp}-${randomString}`;
+      },
+      validation: (Rule: any) => Rule.required(),
+      description: 'Automatically generated unique company identifier'
     },
     {
       name: 'companyName',
