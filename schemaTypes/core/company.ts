@@ -394,26 +394,44 @@ export default {
       }
     },
     {
-      name: 'totalSharesOffered',
-      title: 'Total Shares Offered (Primary)',
+      name: 'totalShares',
+      title: 'Total Shares',
       type: 'number',
       group: 'primary',
+      validation: (Rule: any) => Rule.min(1),
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
-      }
+      },
+      description: 'Total number of shares available for this offering'
     },
     {
-      name: 'sharesRemaining',
-      title: 'Shares Remaining (Primary)',
+      name: 'availableShares',
+      title: 'Available Shares (auto-adjusted)',
       type: 'number',
       group: 'primary',
+      readOnly: true,
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
-      }
+      },
+      description: 'Automatically calculated: Total Shares - Shares Sold'
+    },
+    {
+      name: 'sharesSold',
+      title: 'Shares Sold (auto-adjusted)',
+      type: 'number',
+      group: 'primary',
+      readOnly: true,
+      initialValue: 0,
+      hidden: ({ document }: any) => {
+        const marketType = document?.marketType;
+        const enabled = document?.primaryMarketEnabled;
+        return marketType === 'secondary' || !enabled;
+      },
+      description: 'Automatically calculated from completed transactions'
     },
     {
       name: 'minInvestmentShares',
