@@ -37,27 +37,6 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      name: 'name',
-      title: 'Display Name',
-      type: 'string',
-      group: 'basic'
-    },
-    {
-      name: 'title',
-      title: 'Page Title',
-      type: 'string',
-      group: 'basic',
-      description: 'SEO-friendly title for the company page'
-    },
-    {
-      name: 'slug',
-      title: 'URL Slug',
-      type: 'slug',
-      group: 'basic',
-      options: { source: 'companyName', maxLength: 96 },
-      validation: (Rule: any) => Rule.required()
-    },
-    {
       name: 'website',
       title: 'Company Website',
       type: 'url',
@@ -80,13 +59,6 @@ export default {
       title: 'Company Description',
       type: 'blockContent',
       group: 'basic'
-    },
-    {
-      name: 'companyOverview',
-      title: 'Company Overview',
-      type: 'text',
-      group: 'basic',
-      description: 'Plain text overview for API/display purposes'
     },
     {
       name: 'yearFounded',
@@ -191,7 +163,6 @@ export default {
           { title: 'Other', value: 'other' }
         ]
       },
-      validation: (Rule: any) => Rule.required()
     },
     {
       name: 'marketType',
@@ -425,7 +396,7 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Auto-calculated: Total Shares - Shares Sold. Can be manually edited.',
+      description: 'Auto-calculated: Total Shares - Shares Sold. Can be manually edited.'
       initialValue: ({ document }: any) => {
         const total = document?.totalShares || 0;
         const sold = document?.sharesSold || 0;
