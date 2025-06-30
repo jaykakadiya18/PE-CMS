@@ -10,12 +10,6 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: { source: 'title' }
-    },
-    {
       name: 'summary',
       title: 'Summary',
       type: 'text'
@@ -30,6 +24,11 @@ export default {
       title: 'Featured Image',
       type: 'image',
       options: { hotspot: true }
+    },
+    {
+      name: 'imageUrl',
+      title: 'Image url',
+      type: 'string'
     },
     {
       name: 'publishedAt',

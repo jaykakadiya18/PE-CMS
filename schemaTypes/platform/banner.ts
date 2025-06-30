@@ -31,24 +31,54 @@ export default {
       type: 'url'
     },
     {
+      name: 'targetLocation',
+      title: 'Target Location',
+      type: 'string',
+      options: {
+        list: [
+          'Dashboard',
+          'Asset Detail',
+          'Watchlist',
+          'Market Overview'
+        ]
+      },
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      name: 'startDate',
+      title: 'Start Date',
+      type: 'datetime',
+      description: 'When the banner should start displaying'
+    },
+    {
+      name: 'endDate',
+      title: 'End Date',
+      type: 'datetime',
+      description: 'When the banner should stop displaying'
+    },
+    {
       name: 'isActive',
       title: 'Is Active',
       type: 'boolean',
-      initialValue: false
+      initialValue: false,
+      description: 'Toggle to activate/deactivate this banner'
     },
+    // Legacy fields (keeping for backwards compatibility)
     {
       name: 'displayStart',
-      title: 'Display Start Date',
-      type: 'datetime'
+      title: 'Display Start Date (Legacy)',
+      type: 'datetime',
+      hidden: true
     },
     {
       name: 'displayEnd',
-      title: 'Display End Date',
-      type: 'datetime'
+      title: 'Display End Date (Legacy)',
+      type: 'datetime',
+      hidden: true
     },
     {
       name: 'bannerType',
-      title: 'Banner Type',
+      title: 'Banner Type (Legacy)',
       type: 'string',
       options: {
         list: [
@@ -57,14 +87,23 @@ export default {
           'Asset Page',
           'Global'
         ]
-      }
+      },
+      hidden: true
     }
   ],
   preview: {
     select: {
       title: 'title',
-      subtitle: 'bannerType',
-      media: 'bannerImage'
+      subtitle: 'targetLocation',
+      media: 'bannerImage',
+      isActive: 'isActive'
+    },
+    prepare({ title, subtitle, media, isActive }: { title: string; subtitle: string; media: any; isActive: boolean }) {
+      return {
+        title: title,
+        subtitle: `${subtitle} ${isActive ? '(Active)' : '(Inactive)'}`,
+        media
+      }
     }
   }
 }
