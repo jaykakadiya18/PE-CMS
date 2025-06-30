@@ -21,21 +21,11 @@ export default {
       group: 'basic',
       readOnly: true,
       initialValue: () => {
-<<<<<<< HEAD
         // Generate a proper UUID v4
         return crypto.randomUUID();
       },
       validation: (Rule: any) => Rule.required(),
       description: 'Automatically generated UUID for the company'
-=======
-        // Generate a unique ID with timestamp and random string
-        const timestamp = Date.now();
-        const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
-        return `COMP-${timestamp}-${randomString}`;
-      },
-      validation: (Rule: any) => Rule.required(),
-      description: 'Automatically generated unique company identifier'
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     },
     {
       name: 'companyName',
@@ -71,7 +61,6 @@ export default {
     {
       name: 'yearFounded',
       title: 'Year Founded',
-<<<<<<< HEAD
       type: 'string',
       group: 'basic'
     },
@@ -87,81 +76,6 @@ export default {
       type: 'number',
       group: 'basic',
       validation: (Rule: any) => Rule.min(0)
-    },
-    {
-      name: 'sector',
-      title: 'Sector',
-=======
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
-      type: 'string',
-      group: 'basic',
-      options: {
-        list: [
-          { title: 'Tech', value: 'tech' },
-          { title: 'Finance', value: 'finance' },
-          { title: 'AI/ML', value: 'ai_ml' },
-          { title: 'Healthcare', value: 'healthcare' },
-          { title: 'Green Energy', value: 'green_energy' },
-          { title: 'SaaS', value: 'saas' },
-          { title: 'Space', value: 'space' },
-          { title: 'AI', value: 'ai' },
-          { title: 'Software', value: 'software' }
-        ]
-      },
-      validation: (Rule: any) => Rule.required()
-    },
-    {
-      name: 'headquarters',
-      title: 'Headquarters',
-      type: 'string',
-      group: 'basic',
-      description: 'industry sector field'
-    },
-<<<<<<< HEAD
-=======
-    {
-      name: 'numberOfEmployees',
-      title: 'Number of Employees',
-      type: 'number',
-      group: 'basic',
-      validation: (Rule: any) => Rule.min(0)
-    },
-    {
-      name: 'isPublic',
-      title: 'Public Company',
-      type: 'boolean',
-      group: 'basic',
-      initialValue: false,
-      description: 'Is this a publicly traded company?'
-    },
-    {
-      name: 'statusLabel',
-      title: 'Status Label',
-      type: 'string',
-      group: 'basic',
-      options: {
-        list: [
-          { title: 'Live', value: 'live' },
-          { title: 'Upcoming', value: 'upcoming' },
-          { title: 'Closed', value: 'closed' },
-          { title: 'Paused', value: 'paused' },
-          { title: 'Coming Soon', value: 'coming_soon' }
-        ]
-      }
-    },
-    {
-      name: 'investmentStatus',
-      title: 'Investment Status',
-      type: 'string',
-      group: 'basic',
-      options: {
-        list: [
-          { title: 'Live', value: 'live' },
-          { title: 'Closed', value: 'closed' },
-          { title: 'Paused', value: 'paused' },
-          { title: 'Coming Soon', value: 'coming_soon' }
-        ]
-      }
     },
     {
       name: 'sector',
@@ -182,23 +96,14 @@ export default {
         ]
       },
       validation: (Rule: any) => Rule.required()
-    },
-    {
-      name: 'industrySector',
-      title: 'Industry Sector',
-      type: 'string',
-      group: 'basic',
-      description: 'Free-form industry sector field'
     },
     {
       name: 'industry',
       title: 'Industry',
-      type: 'array',
+      type: 'string',
       group: 'basic',
-      of: [{ type: 'string' }],
-      description: 'Multiple industry categories'
+      description: 'industry sector field'
     },
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     {
       name: 'clientGroup',
       title: 'Client Group',
@@ -229,16 +134,6 @@ export default {
       description: '⚠️ This controls which market sections are available below'
     },
     {
-<<<<<<< HEAD
-=======
-      name: 'isVisible',
-      title: 'Visible to Users',
-      type: 'boolean',
-      group: 'basic',
-      initialValue: false
-    },
-    {
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       name: 'isFeatured',
       title: 'Featured Asset',
       type: 'boolean',
@@ -266,72 +161,18 @@ export default {
       initialValue: 'USD'
     },
     {
-<<<<<<< HEAD
       name: 'valuation',
       title: 'Current Valuation Display',
-=======
-      name: 'latestValuation',
-      title: 'Latest Company Valuation',
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       type: 'number',
       group: 'financial',
       description: 'Current valuation amount for display'
     },
     {
-<<<<<<< HEAD
       name: 'valuationHistory',
       title: 'Valuation History',
       type: 'array',
       group: 'financial',
       of: [{ type: 'string' }],
-=======
-      name: 'valuation',
-      title: 'Current Valuation Display',
-      type: 'array',
-      group: 'financial',
-      of: [{ type: 'string' }],
-      description: 'Array of valuation strings for display (e.g., ["$862.80 million", "$1.00 billion"])'
-    },
-    {
-      name: 'valuationRecords',
-      title: 'Valuation History',
-      type: 'array',
-      group: 'financial',
-      of: [{
-        type: 'object',
-        name: 'valuationRecord',
-        title: 'Valuation Record',
-        fields: [
-          {
-            name: 'date',
-            title: 'Valuation Date',
-            type: 'string',
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'value',
-            title: 'Valuation Amount',
-            type: 'number',
-            validation: (Rule: any) => Rule.required().min(0)
-          },
-          {
-            name: 'currency',
-            title: 'Currency',
-            type: 'string',
-            options: {
-              list: ['USD', 'EUR', 'GBP', 'INR']
-            },
-            initialValue: 'USD'
-          },
-          {
-            name: 'source',
-            title: 'Source',
-            type: 'string',
-            description: 'Source of this valuation data'
-          }
-        ]
-      }],
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       description: 'Historical valuation records with dates and amounts'
     },
     {
@@ -347,7 +188,6 @@ export default {
         ]
       }
     },
-<<<<<<< HEAD
     {
       name: 'companyStage',
       title: 'Company Stage',
@@ -384,11 +224,6 @@ export default {
 
     // ===== PRIMARY MARKET =====
     {
-=======
-
-    // ===== PRIMARY MARKET =====
-    {
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       name: 'primaryMarketEnabled',
       title: 'Enable Primary Market',
       type: 'boolean',
@@ -418,14 +253,8 @@ export default {
       group: 'primary',
       options: {
         list: [
-<<<<<<< HEAD
           { title: 'Upcoming', value: 'upcoming' },
           { title: 'Live', value: 'live' },
-=======
-          { title: 'Live', value: 'live' },
-          { title: 'Upcoming', value: 'upcoming' },
-          { title: 'Coming Soon', value: 'coming_soon' },
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
           { title: 'Closed', value: 'closed' }
         ]
       },
@@ -496,11 +325,7 @@ export default {
     },
     {
       name: 'availableShares',
-<<<<<<< HEAD
       title: 'Available Shares',
-=======
-      title: 'Available Shares (auto-adjusted)',
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       type: 'number',
       group: 'primary',
       validation: (Rule: any) => Rule.min(0),
@@ -509,11 +334,7 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-<<<<<<< HEAD
       description: 'Total Shares - Shares Sold. Can be manually edited.',
-=======
-      description: 'Auto-calculated: Total Shares - Shares Sold. Can be manually edited.'
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       initialValue: ({ document }: any) => {
         const total = document?.totalShares || 0;
         const sold = document?.sharesSold || 0;
@@ -522,11 +343,7 @@ export default {
     },
     {
       name: 'sharesSold',
-<<<<<<< HEAD
       title: 'Shares Sold',
-=======
-      title: 'Shares Sold (auto-adjusted)',
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
       type: 'number',
       group: 'primary',
       validation: (Rule: any) => Rule.min(0),
@@ -536,11 +353,7 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-<<<<<<< HEAD
       description: 'Total Shares - Available Shares. Can be manually edited.'
-=======
-      description: 'Auto-calculated: Total Shares - Available Shares. Can be manually edited.'
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     },
     {
       name: 'minInvestmentShares',
@@ -619,36 +432,11 @@ export default {
       group: 'secondary',
       options: {
         list: [
-<<<<<<< HEAD
           { title: 'IPO Lock', value: 'ipo_lock' },
           { title: 'Trading', value: 'trading' },
           { title: 'Paused', value: 'paused' }
         ]
       }
-=======
-          { title: 'Live', value: 'live' },
-          { title: 'Paused', value: 'paused' },
-          { title: 'IPO Locked', value: 'ipo_locked' },
-          { title: 'Closed', value: 'closed' },
-          { title: 'Coming Soon', value: 'coming_soon' }
-        ]
-      },
-      hidden: ({ document }: any) => {
-        const marketType = document?.marketType;
-        const enabled = document?.secondaryMarketEnabled;
-        return marketType === 'primary' || !enabled;
-      },
-      validation: (Rule: any) => Rule.custom((value: any, context: any) => {
-        const document = context.document;
-        const marketType = document?.marketType;
-        const enabled = document?.secondaryMarketEnabled;
-        
-        if ((marketType === 'secondary' || marketType === 'both') && enabled && !value) {
-          return 'Secondary status is required when secondary market is enabled';
-        }
-        return true;
-      })
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     },
     {
       name: 'secondaryCtaEnabled',
@@ -860,27 +648,6 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       }
-<<<<<<< HEAD
-=======
-    },
-    {
-      name: 'secondaryActivityLevel',
-      title: 'Secondary Market Activity Level',
-      type: 'string',
-      group: 'automation',
-      options: {
-        list: [
-          { title: 'Low', value: 'low' },
-          { title: 'Medium', value: 'medium' },
-          { title: 'High', value: 'high' }
-        ]
-      },
-      hidden: ({ document }: any) => {
-        const marketType = document?.marketType;
-        const enabled = document?.secondaryMarketEnabled;
-        return marketType === 'primary' || !enabled;
-      }
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     },
     {
       name: 'secondaryActivityLevel',
@@ -921,60 +688,9 @@ export default {
       title: 'Management Team',
       type: 'array',
       group: 'content',
-<<<<<<< HEAD
       of: [{ type: 'string' }],
       description: 'Company leadership and management team'
     },
-=======
-      of: [{
-        type: 'object',
-        name: 'managementMember',
-        title: 'Management Member',
-        fields: [
-          {
-            name: 'name',
-            title: 'Name',
-            type: 'string',
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'position',
-            title: 'Position/Title',
-            type: 'string',
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'bio',
-            title: 'Biography',
-            type: 'text'
-          },
-          {
-            name: 'image',
-            title: 'Profile Image',
-            type: 'image',
-            options: { hotspot: true }
-          },
-          {
-            name: 'linkedin',
-            title: 'LinkedIn URL',
-            type: 'url'
-          }
-        ]
-      }],
-      description: 'Company leadership and management team'
-    },
-    {
-      name: 'news',
-      title: 'Company News',
-      type: 'array',
-      group: 'content',
-      of: [{
-        type: 'reference',
-        to: [{ type: 'newsArticle' }]
-      }],
-      description: 'Related news articles about this company'
-    },
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     {
       name: 'faqs',
       title: 'FAQs',
@@ -1029,18 +745,7 @@ export default {
     },
 
     // ===== WORKFLOW & QA =====
-<<<<<<< HEAD
     
-=======
-    {
-      name: 'validationErrors',
-      title: 'Validation Errors',
-      type: 'array',
-      group: 'workflow',
-      of: [{ type: 'string' }],
-      readOnly: true
-    },
->>>>>>> eeba74187b493497f2ab343b45daedf80526d99f
     {
       name: 'qaChecked',
       title: 'QA Checked',
