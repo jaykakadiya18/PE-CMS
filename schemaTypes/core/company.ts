@@ -4,9 +4,9 @@ export default {
   type: 'document',
   groups: [
     { name: 'basic', title: 'Basic Info', default: true },
-    { name: 'financial', title: 'Financial' },
     { name: 'primary', title: 'Primary Market' },
     { name: 'secondary', title: 'Secondary Market' },
+    { name: 'financial', title: 'Financial' },
     { name: 'tranches', title: 'Share Tranches' },
     { name: 'automation', title: 'Automation & Tags' },
     { name: 'content', title: 'Content & Media' },
@@ -149,79 +149,6 @@ export default {
       description: 'Only available when "Visible to Users" is enabled'
     },
 
-    // ===== FINANCIAL =====
-    {
-      name: 'valuationCurrency',
-      title: 'Valuation Currency',
-      type: 'string',
-      group: 'financial',
-      options: {
-        list: ['USD', 'EUR', 'GBP']
-      },
-      initialValue: 'USD'
-    },
-    {
-      name: 'valuation',
-      title: 'Current Valuation Display',
-      type: 'number',
-      group: 'financial',
-      description: 'Current valuation amount for display'
-    },
-    {
-      name: 'valuationHistory',
-      title: 'Valuation History',
-      type: 'array',
-      group: 'financial',
-      of: [{ type: 'string' }],
-      description: 'Historical valuation records with dates and amounts'
-    },
-    {
-      name: 'assetType',
-      title: 'Asset Type',
-      type: 'string',
-      group: 'financial',
-      options: {
-        list: [
-          { title: 'Equity', value: 'equity' },
-          { title: 'Debt', value: 'debt' },
-          { title: 'Hybrid', value: 'hybrid' }
-        ]
-      }
-    },
-    {
-      name: 'companyStage',
-      title: 'Company Stage',
-      type: 'string',
-      group: 'financial',
-      options: {
-        list: [
-          { title: 'Early', value: 'early' },
-          { title: 'Mid', value: 'mid' },
-          { title: 'Late', value: 'late' }
-        ]
-      },
-      validation: (Rule: any) => Rule.required(),
-      description: 'Stage of company development'
-    },
-    {
-      name: 'markupFee',
-      title: 'Markup Fee (%)',
-      type: 'number',
-      group: 'financial',
-      validation: (Rule: any) => Rule.min(0).max(100),
-      description: 'Markup percentage applied to internal price'
-    },
-    {
-      name: 'platformPrice',
-      title: 'Platform Price (Auto-calculated)',
-      type: 'number',
-      group: 'financial',
-      readOnly: true,
-      description: 'Auto-calculated: Internal Price + Markup Fee',
-      // You'll need to implement the auto-calculation logic in your application
-      // This could be done via a webhook, mutation, or computed field
-    },
-
     // ===== PRIMARY MARKET =====
     {
       name: 'primaryMarketEnabled',
@@ -258,6 +185,7 @@ export default {
           { title: 'Closed', value: 'closed' }
         ]
       },
+      initialValue: 'upcoming',
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
@@ -353,7 +281,7 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Total Shares - Available Shares. Can be manually edited.'
+      description: 'Total Shares - Available Shares.  from (BE)'
     },
     {
       name: 'minInvestmentShares',
@@ -436,6 +364,12 @@ export default {
           { title: 'Trading', value: 'trading' },
           { title: 'Paused', value: 'paused' }
         ]
+      },
+      initialValue: 'trading',
+      hidden: ({ document }: any) => {
+        const marketType = document?.marketType;
+        const enabled = document?.secondaryMarketEnabled;
+        return marketType === 'primary' || !enabled;
       }
     },
     {
@@ -525,6 +459,283 @@ export default {
       }]
     },
 
+    // ===== FINANCIAL =====
+    {
+      name: 'valuationCurrency',
+      title: 'Valuation Currency',
+      type: 'string',
+      group: 'financial',
+      options: {
+        list: ['USD', 'EUR', 'GBP']
+      },
+      initialValue: 'USD'
+    },
+    {
+      name: 'valuation',
+      title: 'Current Valuation Display',
+      type: 'string',
+      group: 'financial',
+      description: 'Current valuation amount for display'
+    },
+    // In your company schema
+    {
+      name: 'valuationHistory',
+      title: 'Valuation History',
+      type: 'array',
+      group: 'financial',
+      of: [
+        {
+          type: 'object',
+          name: 'valuationRecord',
+          title: 'Valuation Record',
+          fields: [
+            {
+              name: 'date',
+              title: 'Date',
+              type: 'string',
+              description: 'Date of the valuation (MM/DD/YY format)',
+              validation: (Rule: any) => Rule.required()
+            },
+            {
+              name: 'value',
+              title: 'Valuation Amount',
+              type: 'number',
+              description: 'Valuation amount in USD',
+              validation: (Rule: any) => Rule.required().min(0)
+            }
+          ],
+          preview: {
+            select: {
+              date: 'date',
+              value: 'value'
+            },
+            prepare({ date, value }: { date: string; value: number }) {
+              return {
+                title: `${date}`,
+                subtitle: `$${(value / 1000000000).toFixed(1)}B`
+              }
+            }
+          }
+        }
+      ],
+      description: 'Historical valuation records with dates and amounts',
+      options: {
+        sortable: true
+      }
+    },
+    {
+      name: 'fundingHistory',
+      title: 'Funding History',
+      type: 'array',
+      group: 'financial',
+      of: [
+        {
+          type: 'object',
+          name: 'fundingRecord',
+          title: 'Funding Record',
+          fields: [
+            {
+              name: 'date',
+              title: 'Date',
+              type: 'string',
+              description: 'Date of the funding round (MM/DD/YY format)',
+              validation: (Rule: any) => Rule.required()
+            },
+            {
+              name: 'amount',
+              title: 'Funding Amount',
+              type: 'number',
+              description: 'Funding amount in USD',
+              validation: (Rule: any) => Rule.required().min(0)
+            },
+            {
+              name: 'roundType',
+              title: 'Funding Round Type',
+              type: 'string',
+              description: 'Type of funding round (e.g., Seed, Series A, Series B, etc.)',
+            }
+          ],
+          preview: {
+            select: {
+              date: 'date',
+              amount: 'amount',
+              roundType: 'roundType'
+            },
+            prepare({ date, amount, roundType }: { date: string; amount: number; roundType: string }) {
+              const formatAmount = (value: number) => {
+                if (value >= 1000000000) {
+                  return `${(value / 1000000000).toFixed(1)}B`;
+                } else if (value >= 1000000) {
+                  return `${(value / 1000000).toFixed(1)}M`;
+                } else if (value >= 1000) {
+                  return `${(value / 1000).toFixed(1)}K`;
+                } else {
+                  return `${value}`;
+                }
+              };
+              
+              const roundTypeDisplay = roundType?.replace('_', ' ').toUpperCase() || 'Unknown';
+              
+              return {
+                title: `${date} - ${roundTypeDisplay}`,
+                subtitle: formatAmount(amount)
+              };
+            }
+          }
+        }
+      ],
+      description: 'Historical funding records with dates, amounts, and round types',
+      options: {
+        sortable: true
+      }
+    },
+    {
+      name: 'companyPerformanceMetrics',
+      title: 'Company Performance Metrics',
+      type: 'array',
+      group: 'financial',
+      of: [
+        {
+          type: 'object',
+          name: 'performanceRecord',
+          title: 'Performance Record',
+          fields: [
+            {
+              name: 'date',
+              title: 'Date',
+              type: 'string',
+              description: 'Date of the performance measurement (MM/DD/YY format)',
+              validation: (Rule: any) => Rule.required()
+            },
+            {
+              name: 'heatScore',
+              title: 'Heat Score',
+              type: 'number',
+              description: 'Heat score metric',
+              validation: (Rule: any) => Rule.required().min(0).max(100)
+            },
+            {
+              name: 'heatTrend',
+              title: 'Heat Trend',
+              type: 'string',
+              description: 'Heat trend direction (e.g., Up, Down, Stable)',
+              options: {
+                list: [
+                  { title: 'Up', value: 'up' },
+                  { title: 'Down', value: 'down' },
+                  { title: 'Stable', value: 'stable' }
+                ]
+              }
+            },
+            {
+              name: 'growthScore',
+              title: 'Growth Score',
+              type: 'number',
+              description: 'Growth score metric',
+              validation: (Rule: any) => Rule.required().min(0).max(100)
+            },
+            {
+              name: 'growthTrend',
+              title: 'Growth Trend',
+              type: 'string',
+              description: 'Growth trend direction (e.g., Up, Down, Stable)',
+              options: {
+                list: [
+                  { title: 'Up', value: 'up' },
+                  { title: 'Down', value: 'down' },
+                  { title: 'Stable', value: 'stable' }
+                ]
+              }
+            }
+          ],
+          preview: {
+            select: {
+              date: 'date',
+              heatScore: 'heatScore',
+              heatTrend: 'heatTrend',
+              growthScore: 'growthScore',
+              growthTrend: 'growthTrend'
+            },
+            prepare({ date, heatScore, heatTrend, growthScore, growthTrend }: { 
+              date: string; 
+              heatScore: number; 
+              heatTrend: string; 
+              growthScore: number; 
+              growthTrend: string; 
+            }) {
+              const formatTrend = (trend: string) => {
+                switch(trend) {
+                  case 'up': return '↗️';
+                  case 'down': return '↘️';
+                  case 'stable': return '→';
+                  default: return '';
+                }
+              };
+              
+              const heatTrendIcon = formatTrend(heatTrend);
+              const growthTrendIcon = formatTrend(growthTrend);
+              
+              return {
+                title: `${date}`,
+                subtitle: `Heat: ${heatScore} ${heatTrendIcon} | Growth: ${growthScore} ${growthTrendIcon}`
+              };
+            }
+          }
+        }
+      ],
+      description: 'Performance metrics tracking with heat and growth scores and trends over time',
+      options: {
+        sortable: true
+      }
+    },
+    {
+      name: 'assetType',
+      title: 'Asset Type',
+      type: 'string',
+      group: 'financial',
+      options: {
+        list: [
+          { title: 'Equity', value: 'equity' },
+          { title: 'Debt', value: 'debt' },
+          { title: 'Hybrid', value: 'hybrid' }
+        ]
+      }
+    },
+    {
+      name: 'companyStage',
+      title: 'Company Stage',
+      type: 'string',
+      group: 'financial',
+      options: {
+        list: [
+          { title: 'Early', value: 'early' },
+          { title: 'Mid', value: 'mid' },
+          { title: 'Late', value: 'late' }
+        ]
+      },
+      initialValue: 'early', // Added default value
+      validation: (Rule: any) => Rule.required(),
+      description: 'Stage of company development'
+    },
+    {
+      name: 'markupFee',
+      title: 'Markup Fee (%)',
+      type: 'number',
+      group: 'financial',
+      validation: (Rule: any) => Rule.min(0).max(100),
+      description: 'Markup percentage applied to internal price'
+    },
+    {
+      name: 'platformPrice',
+      title: 'Platform Price (Auto-calculated)',
+      type: 'number',
+      group: 'financial',
+      readOnly: true,
+      description: 'Auto-calculated: Internal Price + Markup Fee',
+      // You'll need to implement the auto-calculation logic in your application
+      // This could be done via a webhook, mutation, or computed field
+    },
+
     // ===== SHARE TRANCHES =====
     {
       name: 'shareTranches',
@@ -532,73 +743,10 @@ export default {
       type: 'array',
       group: 'tranches',
       of: [{
-        type: 'object',
-        name: 'tranche',
-        title: 'Share Tranche',
-        fields: [
-          {
-            name: 'trancheId',
-            title: 'Tranche ID',
-            type: 'string',
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'quantity',
-            title: 'Share Quantity',
-            type: 'number',
-            validation: (Rule: any) => Rule.required().min(1)
-          },
-          {
-            name: 'publicPricePerShare',
-            title: 'Public Price Per Share',
-            type: 'number',
-            validation: (Rule: any) => Rule.required().min(0)
-          },
-          {
-            name: 'internalPaidPrice',
-            title: 'Internal Paid Price',
-            type: 'number',
-            validation: (Rule: any) => Rule.required().min(0)
-          },
-          {
-            name: 'dateAdded',
-            title: 'Date Added',
-            type: 'datetime',
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'marketType',
-            title: 'Market Type for this Tranche',
-            type: 'string',
-            options: {
-              list: [
-                { title: 'Primary', value: 'primary' },
-                { title: 'Secondary', value: 'secondary' }
-              ]
-            },
-            validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'trancheStatus',
-            title: 'Tranche Status',
-            type: 'string',
-            options: {
-              list: [
-                { title: 'Active', value: 'active' },
-                { title: 'Sold Out', value: 'sold_out' },
-                { title: 'Closed', value: 'closed' },
-                { title: 'Pending', value: 'pending' }
-              ]
-            },
-            initialValue: 'pending'
-          },
-          {
-            name: 'terms',
-            title: 'Tranche Terms',
-            type: 'text'
-          }
-        ]
-      }]
+        type: 'reference',
+        to: [{ type: 'shareTranche' }]
+      }],
+      description: 'References to share tranches for this company'
     },
 
     // ===== AUTOMATION & TAGS =====
@@ -670,15 +818,8 @@ export default {
 
     // ===== CONTENT & MEDIA =====
     {
-      name: 'logo',
-      title: 'Logo URL',
-      type: 'url',
-      group: 'content',
-      description: 'Direct URL to company logo'
-    },
-    {
       name: 'logoUrl',
-      title: 'Alternative Logo URL',
+      title: 'Logo URL',
       type: 'url',
       group: 'content',
       description: 'Alternative logo URL field'
@@ -712,20 +853,6 @@ export default {
             title: 'Answer',
             type: 'text',
             validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'isAutoGenerated',
-            title: 'Auto-Generated',
-            type: 'boolean',
-            initialValue: false,
-            readOnly: true
-          },
-          {
-            name: 'generatedAt',
-            title: 'Generated Date',
-            type: 'datetime',
-            readOnly: true,
-            hidden: ({ parent }: any) => !parent?.isAutoGenerated
           },
           {
             name: 'displayOrder',
