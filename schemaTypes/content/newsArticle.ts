@@ -50,6 +50,7 @@ export default {
       name: 'category',
       title: 'Category',
       type: 'string',
+      initialValue: 'Private Equity',
       options: {
         list: [
           'Market News',

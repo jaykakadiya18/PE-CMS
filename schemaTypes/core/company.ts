@@ -1,6 +1,6 @@
 export default {
   name: 'company',
-  title: 'Company',
+  title: 'Company Upload',
   type: 'document',
   groups: [
     { name: 'basic', title: 'Basic Info', default: true },
@@ -61,7 +61,7 @@ export default {
     {
       name: 'yearFounded',
       title: 'Year Founded',
-      type: 'string',
+      type: 'number',
       group: 'basic'
     },
     {
@@ -161,17 +161,6 @@ export default {
         return marketType === 'secondary';
       },
       description: '🔧 Toggle this to show/hide all primary market fields below'
-    },
-    {
-      name: 'primaryCountdownTimer',
-      title: 'Primary Coming Soon Countdown',
-      type: 'datetime',
-      group: 'primary',
-      hidden: ({ document }: any) => {
-        const marketType = document?.marketType;
-        const enabled = document?.primaryMarketEnabled;
-        return marketType === 'secondary' || !enabled;
-      }
     },
     {
       name: 'primaryStatus',
@@ -373,8 +362,8 @@ export default {
       }
     },
     {
-      name: 'secondaryCtaEnabled',
-      title: 'Secondary CTA Enabled',
+      name: 'secondaryCta',
+      title: 'Secondary CTA',
       type: 'boolean',
       group: 'secondary',
       initialValue: false,
@@ -385,8 +374,8 @@ export default {
       }
     },
     {
-      name: 'ipoLockEnabled',
-      title: 'IPO Lock Enabled',
+      name: 'ipoLock',
+      title: 'IPO Lock',
       type: 'boolean',
       group: 'secondary',
       initialValue: false,
@@ -404,8 +393,8 @@ export default {
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.secondaryMarketEnabled;
-        const ipoLockEnabled = document?.ipoLockEnabled;
-        return marketType === 'primary' || !enabled || !ipoLockEnabled;
+        const ipoLock = document?.ipoLock;
+        return marketType === 'primary' || !enabled || !ipoLock;
       },
       description: 'Only shown when IPO Lock is enabled'
     },
@@ -468,12 +457,12 @@ export default {
       options: {
         list: ['USD', 'EUR', 'GBP']
       },
-      initialValue: 'USD'
+      initialValue: () => 'USD'
     },
     {
       name: 'valuation',
       title: 'Current Valuation Display',
-      type: 'string',
+      type: 'number',
       group: 'financial',
       description: 'Current valuation amount for display'
     },
@@ -522,6 +511,13 @@ export default {
       options: {
         sortable: true
       }
+    },
+    {
+      name: 'funding',
+      title: 'Current Funding Display',
+      type: 'number',
+      group: 'financial',
+      description: 'Current funding amount for display'
     },
     {
       name: 'fundingHistory',
@@ -611,41 +607,25 @@ export default {
               name: 'heatScore',
               title: 'Heat Score',
               type: 'number',
-              description: 'Heat score metric',
-              validation: (Rule: any) => Rule.required().min(0).max(100)
+              description: 'Heat score metric'
             },
             {
               name: 'heatTrend',
               title: 'Heat Trend',
-              type: 'string',
-              description: 'Heat trend direction (e.g., Up, Down, Stable)',
-              options: {
-                list: [
-                  { title: 'Up', value: 'up' },
-                  { title: 'Down', value: 'down' },
-                  { title: 'Stable', value: 'stable' }
-                ]
-              }
+              type: 'number',
+              description: 'Heat trend metric'
             },
             {
               name: 'growthScore',
               title: 'Growth Score',
               type: 'number',
-              description: 'Growth score metric',
-              validation: (Rule: any) => Rule.required().min(0).max(100)
+              description: 'Growth score metric'
             },
             {
               name: 'growthTrend',
               title: 'Growth Trend',
-              type: 'string',
-              description: 'Growth trend direction (e.g., Up, Down, Stable)',
-              options: {
-                list: [
-                  { title: 'Up', value: 'up' },
-                  { title: 'Down', value: 'down' },
-                  { title: 'Stable', value: 'stable' }
-                ]
-              }
+              type: 'number',
+              description: 'Growth trend metric'
             }
           ],
           preview: {
@@ -686,19 +666,6 @@ export default {
       description: 'Performance metrics tracking with heat and growth scores and trends over time',
       options: {
         sortable: true
-      }
-    },
-    {
-      name: 'assetType',
-      title: 'Asset Type',
-      type: 'string',
-      group: 'financial',
-      options: {
-        list: [
-          { title: 'Equity', value: 'equity' },
-          { title: 'Debt', value: 'debt' },
-          { title: 'Hybrid', value: 'hybrid' }
-        ]
       }
     },
     {

@@ -4,8 +4,8 @@ import { platformSchemas } from './platform'
 import { sharedSchemas } from './shared'
 
 export const schemaTypes = [
-  ...sharedSchemas,    // Load shared schemas first
   ...coreSchemas,      // Core business schemas  
+  ...sharedSchemas,    // Load shared schemas
   ...contentSchemas,   // Content management
   ...platformSchemas   // Platform features
 ]

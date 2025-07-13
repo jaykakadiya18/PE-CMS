@@ -1,6 +1,6 @@
 export default {
     name: 'assetUpload',
-    title: 'Asset Upload',
+    title: 'Bulk Upload',
     type: 'document',
     fields: [
       {
