@@ -7,6 +7,8 @@ export default {
     { name: 'primary', title: 'Primary Market' },
     { name: 'secondary', title: 'Secondary Market' },
     { name: 'financial', title: 'Financial' },
+    { name: 'company_insights', title: 'Company Insights' }, // New group
+    { name: 'predictions', title: 'Predictions & Analytics' }, // New group
     { name: 'tranches', title: 'Share Tranches' },
     { name: 'automation', title: 'Automation & Tags' },
     { name: 'content', title: 'Content & Media' },
@@ -59,10 +61,26 @@ export default {
       group: 'basic'
     },
     {
+      name: 'companyHighlights',
+      title: 'Company Highlights',
+      type: 'array',
+      group: 'basic',
+      of: [{ type: 'string' }],
+      description: 'Key highlights and achievements of the company'
+    },
+    {
       name: 'yearFounded',
       title: 'Year Founded',
       type: 'number',
       group: 'basic'
+    },
+    // Enhanced founding date field
+    {
+      name: 'foundedDate',
+      title: 'Founded Date (Detailed)',
+      type: 'string',
+      group: 'basic',
+      description: 'More specific founding date (e.g., "May 2015")'
     },
     {
       name: 'headquarters',
@@ -76,6 +94,14 @@ export default {
       type: 'number',
       group: 'basic',
       validation: (Rule: any) => Rule.min(0)
+    },
+    // Enhanced employee range field
+    {
+      name: 'employeeRange',
+      title: 'Employee Range',
+      type: 'string',
+      group: 'basic',
+      description: 'Employee count range for the company (e.g., "1,001-5,000")'
     },
     {
       name: 'sector',
@@ -92,7 +118,10 @@ export default {
           { title: 'SaaS', value: 'saas' },
           { title: 'Space', value: 'space' },
           { title: 'AI', value: 'ai' },
-          { title: 'Software', value: 'software' }
+          { title: 'Software', value: 'software' },
+          { title: 'Gaming', value: 'gaming' },
+          { title: 'Messaging', value: 'messaging' },
+          { title: 'Communities', value: 'communities' }
         ]
       },
       validation: (Rule: any) => Rule.required()
@@ -103,6 +132,37 @@ export default {
       type: 'string',
       group: 'basic',
       description: 'industry sector field'
+    },
+    // New hub tags field
+    {
+      name: 'hubTags',
+      title: 'Hub Tags',
+      type: 'string',
+      group: 'basic',
+      description: 'Tag that describe the company\'s focus area'
+    },
+    // New company status fields
+    {
+      name: 'operatingStatus',
+      title: 'Operating Status',
+      type: 'string',
+      group: 'basic',
+      description: 'Operating status (e.g., "Active", "Inactive", "Acquired")'
+    },
+    {
+      name: 'companyType',
+      title: 'Company Type',
+      type: 'string',
+      group: 'basic',
+      description: 'Company type (e.g., "For Profit", "Non Profit", "Government")'
+    },
+    // New CB Rank field
+    {
+      name: 'cbRank',
+      title: 'Crunchbase Rank',
+      type: 'string',
+      group: 'basic',
+      description: 'Crunchbase ranking (e.g., "#5")'
     },
     {
       name: 'clientGroup',
@@ -466,7 +526,14 @@ export default {
       group: 'financial',
       description: 'Current valuation amount for display'
     },
-    // In your company schema
+    // Enhanced revenue range field
+    {
+      name: 'estimatedRevenueRange',
+      title: 'Estimated Revenue Range',
+      type: 'string',
+      group: 'financial',
+      description: 'Estimated annual revenue range (e.g., "$1B to $10B")'
+    },
     {
       name: 'valuationHistory',
       title: 'Valuation History',
@@ -513,11 +580,93 @@ export default {
       }
     },
     {
+      name: 'revenueData',
+      title: 'Revenue Data',
+      type: 'array',
+      group: 'financial',
+      of: [
+        {
+          type: 'object',
+          name: 'revenueRecord',
+          title: 'Revenue Record',
+          fields: [
+            {
+              name: 'year',
+              title: 'Year',
+              type: 'string',
+              description: 'Year of the revenue record (YYYY format)',
+              validation: (Rule: any) => Rule.required().regex(/^\d{4}$/, {
+                name: 'year',
+                invert: false
+              }).error('Year must be in YYYY format')
+            },
+            {
+              name: 'revenue',
+              title: 'Revenue Amount',
+              type: 'number',
+              description: 'Revenue amount in USD'
+            }
+          ],
+          preview: {
+            select: {
+              year: 'year',
+              revenue: 'revenue'
+            },
+            prepare({ year, revenue }: { year: string; revenue: number }) {
+              const formatRevenue = (value: number) => {
+                if (value >= 1000000000) {
+                  return `$${(value / 1000000000).toFixed(1)}B`;
+                } else if (value >= 1000000) {
+                  return `$${(value / 1000000).toFixed(1)}M`;
+                } else if (value >= 1000) {
+                  return `$${(value / 1000).toFixed(1)}K`;
+                } else {
+                  return `$${value}`;
+                }
+              };
+              
+              return {
+                title: `${year}`,
+                subtitle: formatRevenue(revenue)
+              };
+            }
+          }
+        }
+      ],
+      description: 'Historical revenue records with years and amounts',
+      options: {
+        sortable: true
+      }
+    },
+    {
       name: 'funding',
       title: 'Current Funding Display',
       type: 'number',
       group: 'financial',
       description: 'Current funding amount for display'
+    },
+    // Enhanced funding fields
+    {
+      name: 'totalFundingAmount',
+      title: 'Total Funding Amount',
+      type: 'string',
+      group: 'financial',
+      description: 'Total funding raised (e.g., "$995.4M")'
+    },
+    {
+      name: 'numberOfFundingRounds',
+      title: 'Number of Funding Rounds',
+      type: 'string',
+      group: 'financial',
+      description: 'Total number of funding rounds'
+    },
+    {
+      name: 'leadInvestors',
+      title: 'Lead Investors',
+      type: 'array',
+      group: 'financial',
+      of: [{ type: 'string' }],
+      description: 'List of lead investors in the company'
     },
     {
       name: 'fundingHistory',
@@ -680,7 +829,7 @@ export default {
           { title: 'Late', value: 'late' }
         ]
       },
-      initialValue: 'early', // Added default value
+      initialValue: 'early',
       validation: (Rule: any) => Rule.required(),
       description: 'Stage of company development'
     },
@@ -698,9 +847,122 @@ export default {
       type: 'number',
       group: 'financial',
       readOnly: true,
-      description: 'Auto-calculated: Internal Price + Markup Fee',
-      // You'll need to implement the auto-calculation logic in your application
-      // This could be done via a webhook, mutation, or computed field
+      description: 'Auto-calculated: Internal Price + Markup Fee'
+    },
+
+    // ===== COMPANY INSIGHTS GROUP =====
+    {
+      name: 'investmentBreakdown',
+      title: 'Investment Breakdown',
+      type: 'object',
+      group: 'company_insights',
+      fields: [
+        {
+          name: 'numberOfFunds',
+          title: 'Number of Funds',
+          type: 'string',
+          description: 'Number of funds invested in this company'
+        },
+        {
+          name: 'numberOfInvestments',
+          title: 'Number of Investments',
+          type: 'string',
+          description: 'Number of investment rounds'
+        },
+        {
+          name: 'numberOfAcquisitions',
+          title: 'Number of Acquisitions',
+          type: 'string',
+          description: 'Number of acquisitions made by this company'
+        }
+      ]
+    },
+    {
+      name: 'growthInsight',
+      title: 'Growth Insight',
+      type: 'object',
+      group: 'company_insights',
+      fields: [
+        {
+          name: 'description',
+          title: 'Growth Description',
+          type: 'text',
+          description: 'Description of the company\'s growth trajectory'
+        },
+        {
+          name: 'topContributingFactors',
+          title: 'Top Contributing Factors',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'Key factors contributing to growth'
+        }
+      ]
+    },
+
+    // ===== PREDICTIONS & ANALYTICS GROUP =====
+    {
+      name: 'ipoPrediction',
+      title: 'IPO Prediction',
+      type: 'object',
+      group: 'predictions',
+      fields: [
+        {
+          name: 'predictionTag',
+          title: 'IPO Prediction',
+          type: 'string',
+          description: 'Prediction likelihood for IPO (e.g., "Likely", "Unlikely")'
+        },
+        {
+          name: 'topContributingFactors',
+          title: 'IPO Contributing Factors',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'Factors that contribute to IPO likelihood'
+        }
+      ]
+    },
+    {
+      name: 'acquisitionPrediction',
+      title: 'Acquisition Prediction',
+      type: 'object',
+      group: 'predictions',
+      fields: [
+        {
+          name: 'predictionTag',
+          title: 'Acquisition Prediction',
+          type: 'string',
+          description: 'Prediction likelihood for acquisition (e.g., "Likely", "Unlikely")'
+        },
+        {
+          name: 'topContributingFactors',
+          title: 'Acquisition Contributing Factors',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'Factors that contribute to acquisition likelihood'
+        }
+      ]
+    },
+    {
+      name: 'growthPrediction',
+      title: 'Growth Prediction',
+      type: 'object',
+      group: 'predictions',
+      fields: [
+        {
+          name: 'predictionNumber',
+          title: 'Growth Prediction Score',
+          type: 'number',
+          validation: (Rule: any) => Rule.min(0).max(100),
+          description: 'Growth prediction score (0-100)'
+        },
+        {
+          name: 'topContributingFactors',
+          title: 'Growth Contributing Factors',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'Factors that contribute to growth prediction'
+        }
+      ]
     },
 
     // ===== SHARE TRANCHES =====
@@ -839,7 +1101,6 @@ export default {
     },
 
     // ===== WORKFLOW & QA =====
-    
     {
       name: 'qaChecked',
       title: 'QA Checked',
