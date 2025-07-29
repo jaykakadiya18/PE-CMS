@@ -186,8 +186,7 @@ export default {
         list: [
           { title: 'Primary Market Only', value: 'primary' },
           { title: 'Secondary Market Only', value: 'secondary' },
-          { title: 'Both Primary & Secondary', value: 'both' },
-          { title: 'Private Investment', value: 'PI' }
+          { title: 'Both Primary & Secondary', value: 'both' }
         ]
       },
       validation: (Rule: any) => Rule.required(),
@@ -273,7 +272,8 @@ export default {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
-      }
+      },
+      description: 'Price per share for the primary market offering(odoo trigger automatically, based of Company_stage, Markup fee & Internal Price)'
     },
     {
       name: 'primaryInternalPrice',
@@ -285,7 +285,8 @@ export default {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
-      }
+      },
+      description: 'Internal price used for calculations, not shown to users'
     },
     {
       name: 'totalShares',
@@ -311,7 +312,7 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Total Shares - Shares Sold. Can be manually edited.',
+      description: 'Total Shares - Shares Sold. Can be changed automatically (data comes through BE & odoo trigger).',
       initialValue: ({ document }: any) => {
         const total = document?.totalShares || 0;
         const sold = document?.sharesSold || 0;
@@ -330,25 +331,13 @@ export default {
         const enabled = document?.primaryMarketEnabled;
         return marketType === 'secondary' || !enabled;
       },
-      description: 'Total Shares - Available Shares.  from (BE)'
+      description: 'Total Shares - Available Shares. Can be changed automatically (data comes through BE & odoo trigger).'
     },
     {
       name: 'minInvestmentShares',
       title: 'Minimum Investment Shares (Primary)',
       type: 'number',
       group: 'primary',
-      hidden: ({ document }: any) => {
-        const marketType = document?.marketType;
-        const enabled = document?.primaryMarketEnabled;
-        return marketType === 'secondary' || !enabled;
-      }
-    },
-    {
-      name: 'fundingProgress',
-      title: 'Funding Progress (%)',
-      type: 'number',
-      group: 'primary',
-      validation: (Rule: any) => Rule.min(0).max(100),
       hidden: ({ document }: any) => {
         const marketType = document?.marketType;
         const enabled = document?.primaryMarketEnabled;
@@ -638,13 +627,6 @@ export default {
         sortable: true
       }
     },
-    {
-      name: 'funding',
-      title: 'Current Funding Display',
-      type: 'number',
-      group: 'financial',
-      description: 'Current funding amount for display'
-    },
     // Enhanced funding fields
     {
       name: 'totalFundingAmount',
@@ -841,15 +823,6 @@ export default {
       validation: (Rule: any) => Rule.min(0).max(100),
       description: 'Markup percentage applied to internal price'
     },
-    {
-      name: 'platformPrice',
-      title: 'Platform Price (Auto-calculated)',
-      type: 'number',
-      group: 'financial',
-      readOnly: true,
-      description: 'Auto-calculated: Internal Price + Markup Fee'
-    },
-
     // ===== COMPANY INSIGHTS GROUP =====
     {
       name: 'investmentBreakdown',
@@ -1054,6 +1027,13 @@ export default {
       description: 'Alternative logo URL field'
     },
     {
+      name: 'logoImage',
+      title: 'Logo Upload',
+      type: 'image',
+      group: 'content',
+      description: 'Upload company logo image file'
+    },
+    {
       name: 'management',
       title: 'Management Team',
       type: 'array',
@@ -1183,7 +1163,7 @@ export default {
     select: {
       title: 'companyName',
       subtitle: 'sector',
-      media: 'media.companyLogo'
+      media: 'logoImage'
     }
   }
 }

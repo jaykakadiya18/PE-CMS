@@ -10,6 +10,11 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
+      name: 'subtitle',
+      title: 'Subheadline',
+      type: 'string'
+    },
+    {
       name: 'summary',
       title: 'Summary',
       type: 'text'
@@ -18,6 +23,12 @@ export default {
       name: 'content',
       title: 'Article Content',
       type: 'blockContent'
+    },
+    {
+      name: 'tableOfContents',
+      title: 'Table of Contents',
+      type: 'array',
+      of: [{ type: 'string' }]
     },
     {
       name: 'featuredImage',
@@ -50,14 +61,18 @@ export default {
       name: 'category',
       title: 'Category',
       type: 'string',
-      initialValue: 'Private Equity',
+      initialValue: 'private_equity',
       options: {
         list: [
-          'Market News',
-          'Technology',
-          'Platform Update',
-          'Finance',
-          'Private Equity'
+          { title: 'Technology', value: 'technology' },
+          { title: 'Finance', value: 'finance' },
+          { title: 'Healthcare', value: 'healthcare' },
+          { title: 'AI & ML', value: 'ai_ml' },
+          { title: 'Green Energy', value: 'green_energy' },
+          { title: 'SaaS', value: 'saas' },
+          { title: 'Market News', value: 'market_news' },
+          { title: 'Platform Update', value: 'platform_update' },
+          { title: 'Private Equity', value: 'private_equity' }
         ]
       }
     },

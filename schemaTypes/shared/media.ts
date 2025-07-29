@@ -5,42 +5,10 @@ export default {
   fields: [
     {
       name: 'assetId',
-      title: 'Asset ID',
+      title: 'Asset Name',
       type: 'string',
       validation: (Rule: any) => Rule.required(),
       description: 'Links to company asset'
-    },
-    {
-      name: 'companyLogo',
-      title: 'Company Logo',
-      type: 'image',
-      options: { 
-        hotspot: true,
-        accept: 'image/*'
-      },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string'
-        }
-      ]
-    },
-    {
-      name: 'featuredImage',
-      title: 'Featured Image',
-      type: 'image',
-      options: { 
-        hotspot: true,
-        accept: 'image/*'
-      },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string'
-        }
-      ]
     },
     {
       name: 'mediaGallery',
@@ -53,7 +21,8 @@ export default {
           { name: 'caption', type: 'string', title: 'Caption' },
           { name: 'altText', type: 'string', title: 'Alt Text' }
         ]
-      }]
+      }],
+      description: 'Images showcasing the company information displayed in the dashboard\'s about section',
     },
     {
       name: 'documents',
@@ -114,7 +83,25 @@ export default {
           { name: 'duration', type: 'string', title: 'Duration' },
           { name: 'description', type: 'text', title: 'Description' }
         ]
-      }]
+      }],
+      description: 'Upload Video file for this company'
+    },
+    {
+      name: 'featuredImage',
+      title: 'Featured Image',
+      type: 'image',
+      options: { 
+        hotspot: true,
+        accept: 'image/*'
+      },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string'
+        }
+      ],
+      description: 'Upload Featured Image for this company'
     }
   ],
   preview: {

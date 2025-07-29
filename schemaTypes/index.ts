@@ -2,16 +2,22 @@ import { coreSchemas } from './core'
 import { contentSchemas } from './content'
 import { platformSchemas } from './platform'
 import { sharedSchemas } from './shared'
+import { publicSchemaTypes } from './public'
 
+// For production dataset - all schemas
 export const schemaTypes = [
-  ...coreSchemas,      // Core business schemas  
-  ...sharedSchemas,    // Load shared schemas
-  ...contentSchemas,   // Content management
-  ...platformSchemas   // Platform features
+  ...coreSchemas,
+  ...sharedSchemas,
+  ...contentSchemas,
+  ...platformSchemas
 ]
 
-// Individual exports for direct imports
+// Export public schemas separately
+export { publicSchemaTypes }
+
+// Individual exports
 export * from './core'
 export * from './content'
 export * from './platform'
 export * from './shared'
+export * from './public'

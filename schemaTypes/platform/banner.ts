@@ -21,6 +21,15 @@ export default {
       options: { hotspot: true }
     },
     {
+      name: 'bannerVideo',
+      title: 'Banner Video',
+      type: 'file',
+      description: 'Upload a video file for the banner',
+      options: {
+        accept: 'video/*'
+      }
+    },
+    {
       name: 'ctaText',
       title: 'CTA Button Text',
       type: 'string'
