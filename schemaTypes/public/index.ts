@@ -1,4 +1,6 @@
 import publicCompany from './publicCompany'
+import publicNews from './publicNews'
+import publicBanner from './publicBanner'
 
-export { publicCompany }
-export const publicSchemaTypes = [publicCompany]
+export { publicCompany, publicNews, publicBanner }
+export const publicSchemaTypes = [publicCompany, publicNews, publicBanner]

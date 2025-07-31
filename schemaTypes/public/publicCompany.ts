@@ -1,25 +1,22 @@
-// ===== REQUIRED FIELDS FOR PUBLIC COMPANY PROFILE PAGE =====
-
 export default {
   name: 'publicCompany',
   title: 'Public Company',
   type: 'document',
   groups: [
     { name: 'basic', title: 'Basic Info', default: true },
-    { name: 'financial', title: 'Financial Data' },
-    { name: 'metrics', title: 'Company Metrics' },
-    { name: 'history', title: 'Historical Data' },
-    { name: 'media', title: 'Media & Content' },
-    { name: 'qa', title: 'Q&A Section' }
+    { name: 'details', title: 'Company Details' },
+    { name: 'financial', title: 'Financial Info' },
+    { name: 'content', title: 'Content' }
   ],
   fields: [
-    // ===== HEADER SECTION =====
+    // ===== BASIC FIELDS =====
     {
       name: 'assetId',
       title: 'Asset ID',
       type: 'string',
       group: 'basic',
-      validation: (Rule: any) => Rule.required()
+      validation: (Rule: any) => Rule.required(),
+      description: 'Unique identifier for the company'
     },
     {
       name: 'companyName',
@@ -32,138 +29,79 @@ export default {
       name: 'companyLogo',
       title: 'Company Logo',
       type: 'image',
-      group: 'media',
-      options: { hotspot: true }
+      group: 'basic',
+      options: { hotspot: true },
+      description: 'Company logo image'
     },
     {
-      name: 'founded',
+      name: 'industry',
+      title: 'Industry',
+      type: 'string',
+      group: 'basic',
+      description: 'Industry classification'
+    },
+    {
+      name: 'sector',
+      title: 'Sector',
+      type: 'string',
+      group: 'basic',
+      options: {
+        list: [
+          { title: 'Technology', value: 'tech' },
+          { title: 'Finance', value: 'finance' },
+          { title: 'AI/ML', value: 'ai_ml' },
+          { title: 'Healthcare', value: 'healthcare' },
+          { title: 'Green Energy', value: 'green_energy' },
+          { title: 'SaaS', value: 'saas' },
+          { title: 'Space', value: 'space' },
+          { title: 'AI', value: 'ai' },
+          { title: 'Software', value: 'software' },
+          { title: 'Gaming', value: 'gaming' },
+          { title: 'Messaging', value: 'messaging' },
+          { title: 'Communities', value: 'communities' }
+        ]
+      },
+      description: 'Business sector'
+    },
+
+    // ===== COMPANY DETAILS =====
+    {
+      name: 'foundedYear',
       title: 'Founded Year',
       type: 'number',
-      group: 'basic',
-      description: 'e.g., 2015'
+      group: 'details',
+      description: 'Year the company was founded'
     },
     {
       name: 'headquarters',
       title: 'Headquarters',
       type: 'string',
-      group: 'basic',
-      description: 'e.g., San Francisco, CA'
+      group: 'details',
+      description: 'Company headquarters location'
     },
     {
-      name: 'currentValuation',
-      title: 'Current Valuation',
+      name: 'employees',
+      title: 'Number of Employees',
       type: 'string',
-      group: 'financial',
-      description: 'Display valuation (e.g., $32B)'
+      group: 'details',
+      description: 'Employee count or range (e.g., "1,001-5,000")'
     },
-
-    // ===== ABOUT SECTION =====
     {
       name: 'description',
       title: 'Company Description',
       type: 'text',
-      group: 'basic',
-      description: 'Main company description for About section'
+      group: 'details',
+      description: 'Brief description of the company'
     },
-
-    // ===== KEY COMPANY METRICS =====
     {
-      name: 'keyMetrics',
-      title: 'Key Company Metrics',
-      type: 'object',
-      group: 'metrics',
-      fields: [
-        {
-          name: 'employees',
-          title: 'Employees',
-          type: 'string',
-          description: 'e.g., "1,001-5,000"'
-        },
-        {
-          name: 'revenue',
-          title: 'Revenue Range',
-          type: 'string',
-          description: 'e.g., "$100M - $500M"'
-        },
-        {
-          name: 'sector',
-          title: 'Sector',
-          type: 'string',
-          options: {
-            list: [
-              'Technology',
-              'Healthcare', 
-              'Finance',
-              'Energy',
-              'Consumer',
-              'Industrial'
-            ]
-          }
-        },
-        {
-          name: 'industry',
-          title: 'Industry',
-          type: 'string'
-        }
-      ]
-    },
-
-    // ===== FUNDING HISTORY =====
-    {
-      name: 'fundingHistory',
-      title: 'Public Funding History',
+      name: 'management',
+      title: 'Management Team',
       type: 'array',
-      group: 'history',
+      group: 'details',
       of: [{
         type: 'object',
-        name: 'fundingRound',
-        title: 'Funding Round',
-        fields: [
-          {
-            name: 'series',
-            title: 'Series',
-            type: 'string',
-            description: 'e.g., Series A, Series B, etc.'
-          },
-          {
-            name: 'amount',
-            title: 'Amount',
-            type: 'string',
-            description: 'e.g., $775 Million'
-          },
-          {
-            name: 'valuation',
-            title: 'Valuation',
-            type: 'string',
-            description: 'e.g., $95 Billion'
-          },
-          {
-            name: 'date',
-            title: 'Date',
-            type: 'string',
-            description: 'e.g., Mar 2023'
-          }
-        ],
-        preview: {
-          select: {
-            title: 'series',
-            subtitle: 'amount'
-          }
-        }
-      }],
-      description: 'Historical funding rounds to display publicly'
-    },
-
-    // ===== LEADERSHIP TEAM =====
-    {
-      name: 'leadership',
-      title: 'Leadership Team',
-      type: 'array',
-      group: 'basic',
-      of: [{
-        type: 'object',
-        name: 'leader',
-        title: 'Leader',
+        name: 'manager',
+        title: 'Manager',
         fields: [
           {
             name: 'name',
@@ -176,137 +114,120 @@ export default {
             title: 'Job Title',
             type: 'string',
             validation: (Rule: any) => Rule.required()
-          },
-          {
-            name: 'photo',
-            title: 'Photo',
-            type: 'image',
-            options: { hotspot: true }
-          },
-          {
-            name: 'bio',
-            title: 'Biography',
-            type: 'text'
           }
         ],
         preview: {
           select: {
             title: 'name',
-            subtitle: 'title',
-            media: 'photo'
+            subtitle: 'title'
           }
         }
       }],
-      description: 'Key leadership team members'
+      description: 'Key management team members'
+    },
+    {
+      name: 'companyStage',
+      title: 'Company Stage',
+      type: 'string',
+      group: 'details',
+      options: {
+        list: [
+          { title: 'Early', value: 'early' },
+          { title: 'Mid', value: 'mid' },
+          { title: 'Late', value: 'late' }
+        ]
+      },
+      description: 'Current stage of company development'
+    },
+    {
+      name: 'cbRank',
+      title: 'Crunchbase Rank',
+      type: 'string',
+      group: 'details',
+      description: 'Crunchbase ranking (e.g., "#5")'
+    },
+    {
+      name: 'companyType',
+      title: 'Company Type',
+      type: 'string',
+      group: 'details',
+      options: {
+        list: [
+          { title: 'For Profit', value: 'for_profit' },
+          { title: 'Non Profit', value: 'non_profit' },
+          { title: 'Government', value: 'government' }
+        ]
+      },
+      description: 'Type of organization'
     },
 
-    // ===== PROJECTS/INITIATIVES =====
+    // ===== FINANCIAL INFO =====
     {
-      name: 'keyProjects',
-      title: 'Key Projects',
+      name: 'estimatedRevenue',
+      title: 'Estimated Revenue Range',
+      type: 'string',
+      group: 'financial',
+      description: 'Estimated annual revenue range (e.g., "$1B to $10B")'
+    },
+    {
+      name: 'hubTags',
+      title: 'Hub Tags',
+      type: 'string',
+      group: 'financial',
+      description: 'Tags that describe the company\'s focus area'
+    },
+    {
+      name: 'fundingHistory',
+      title: 'Funding History',
       type: 'array',
-      group: 'basic',
+      group: 'financial',
       of: [{
         type: 'object',
-        name: 'project',
-        title: 'Project',
+        name: 'fundingRound',
+        title: 'Funding Round',
         fields: [
           {
-            name: 'title',
-            title: 'Project Title',
-            type: 'string'
-          },
-          {
-            name: 'description',
-            title: 'Description',
-            type: 'text'
-          },
-          {
-            name: 'status',
-            title: 'Status',
+            name: 'date',
+            title: 'Date',
             type: 'string',
-            options: {
-              list: [
-                'Active',
-                'Completed',
-                'Upcoming',
-                'On Hold'
-              ]
+            description: 'Date of funding round (e.g., "Mar 2023")'
+          },
+          {
+            name: 'amount',
+            title: 'Amount',
+            type: 'string',
+            description: 'Funding amount (e.g., "$775M")'
+          },
+          {
+            name: 'roundType',
+            title: 'Round Type',
+            type: 'string',
+            description: 'Type of funding round (e.g., "Series A")'
+          }
+        ],
+        preview: {
+          select: {
+            title: 'roundType',
+            subtitle: 'amount',
+            date: 'date'
+          },
+          prepare({ title, subtitle, date }: { title: string; subtitle: string; date: string }) {
+            return {
+              title: title || 'Funding Round',
+              subtitle: `${subtitle} - ${date}`
             }
           }
-        ]
-      }]
-    },
-
-    // ===== FINANCIAL CHARTS DATA =====
-    {
-      name: 'performanceChart',
-      title: 'Performance Chart Data',
-      type: 'object',
-      group: 'financial',
-      fields: [
-        {
-          name: 'chartType',
-          title: 'Chart Type',
-          type: 'string',
-          options: {
-            list: ['revenue', 'valuation', 'growth', 'users']
-          }
-        },
-        {
-          name: 'dataPoints',
-          title: 'Data Points',
-          type: 'array',
-          of: [{
-            type: 'object',
-            fields: [
-              {
-                name: 'period',
-                title: 'Period',
-                type: 'string',
-                description: 'e.g., Q1 2023'
-              },
-              {
-                name: 'value',
-                title: 'Value',
-                type: 'number'
-              }
-            ]
-          }]
         }
-      ]
+      }],
+      description: 'Historical funding rounds'
     },
 
-    // ===== MEDIA GALLERY =====
-    {
-      name: 'mediaGallery',
-      title: 'Media Gallery',
-      type: 'array',
-      group: 'media',
-      of: [{
-        type: 'image',
-        options: { hotspot: true },
-        fields: [
-          {
-            name: 'caption',
-            title: 'Caption',
-            type: 'string'
-          },
-          {
-            name: 'altText',
-            title: 'Alt Text',
-            type: 'string'
-          }
-        ]
-      }]
-    },
-
-    // ===== FAQ SECTION =====
+    // ===== CONTENT =====
     {
       name: 'faqs',
-      title: 'Frequently Asked Questions',
+      title: 'FAQs',
       type: 'array',
-      group: 'qa',
+      group: 'content',
       of: [{
         type: 'object',
         name: 'faq',
@@ -325,7 +246,7 @@ export default {
             validation: (Rule: any) => Rule.required()
           },
           {
-            name: 'order',
+            name: 'displayOrder',
             title: 'Display Order',
             type: 'number',
             initialValue: 1
@@ -334,70 +255,17 @@ export default {
         preview: {
           select: {
             title: 'question',
-            subtitle: 'order'
+            subtitle: 'displayOrder'
+          },
+          prepare({ title, subtitle }: { title: string; subtitle: number }) {
+            return {
+              title: title || 'Question',
+              subtitle: `Order: ${subtitle}`
+            }
           }
         }
       }],
-      description: 'Public FAQ section'
-    },
-
-    // ===== INVESTMENT STATUS =====
-    {
-      name: 'investmentStatus',
-      title: 'Investment Availability',
-      type: 'object',
-      group: 'financial',
-      fields: [
-        {
-          name: 'isAvailable',
-          title: 'Available for Investment',
-          type: 'boolean',
-          initialValue: false
-        },
-        {
-          name: 'marketType',
-          title: 'Market Type',
-          type: 'string',
-          options: {
-            list: [
-              'Primary Market',
-              'Secondary Market',
-              'Both Markets',
-              'Coming Soon',
-              'Closed'
-            ]
-          }
-        },
-        {
-          name: 'minimumInvestment',
-          title: 'Minimum Investment',
-          type: 'string',
-          description: 'e.g., $1,000'
-        }
-      ]
-    },
-
-    // ===== TAGS & CATEGORIES =====
-    {
-      name: 'tags',
-      title: 'Public Tags',
-      type: 'array',
-      group: 'basic',
-      of: [{
-        type: 'string',
-        options: {
-          list: [
-            'Hot',
-            'Trending',
-            'New',
-            'Pre-IPO',
-            'Unicorn',
-            'AI/ML',
-            'Sustainable',
-            'High Growth'
-          ]
-        }
-      }]
+      description: 'Frequently asked questions'
     },
 
     // ===== METADATA =====
@@ -420,12 +288,12 @@ export default {
   preview: {
     select: {
       title: 'companyName',
-      subtitle: 'keyMetrics.sector',
+      subtitle: 'sector',
       media: 'companyLogo'
     },
     prepare({ title, subtitle, media }: { title: string; subtitle: string; media: any }) {
       return {
-        title,
+        title: title || 'Untitled Company',
         subtitle: subtitle || 'No sector',
         media
       }
