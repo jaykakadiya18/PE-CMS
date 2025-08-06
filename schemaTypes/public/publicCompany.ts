@@ -47,18 +47,18 @@ export default {
       group: 'basic',
       options: {
         list: [
-          { title: 'Technology', value: 'tech' },
-          { title: 'Finance', value: 'finance' },
-          { title: 'AI/ML', value: 'ai_ml' },
-          { title: 'Healthcare', value: 'healthcare' },
-          { title: 'Green Energy', value: 'green_energy' },
-          { title: 'SaaS', value: 'saas' },
-          { title: 'Space', value: 'space' },
-          { title: 'AI', value: 'ai' },
-          { title: 'Software', value: 'software' },
-          { title: 'Gaming', value: 'gaming' },
-          { title: 'Messaging', value: 'messaging' },
-          { title: 'Communities', value: 'communities' }
+          { title: 'Tech', value: 'Tech' },
+          { title: 'Finance', value: 'Finance' },
+          { title: 'AI/ML', value: 'AI/ML' },
+          { title: 'Healthcare', value: 'Healthcare' },
+          { title: 'Green Energy', value: 'Green Energy' },
+          { title: 'SaaS', value: 'SaaS' },
+          { title: 'Space', value: 'Space' },
+          { title: 'AI', value: 'AI' },
+          { title: 'Software', value: 'Software' },
+          { title: 'Gaming', value: 'Gaming' },
+          { title: 'Messaging', value: 'Messaging' },
+          { title: 'Communities', value: 'Communities' }
         ]
       },
       description: 'Business sector'

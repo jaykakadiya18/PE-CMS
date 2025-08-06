@@ -64,15 +64,15 @@ export default {
       initialValue: 'private_equity',
       options: {
         list: [
-          { title: 'Technology', value: 'technology' },
-          { title: 'Finance', value: 'finance' },
-          { title: 'Healthcare', value: 'healthcare' },
-          { title: 'AI & ML', value: 'ai_ml' },
-          { title: 'Green Energy', value: 'green_energy' },
-          { title: 'SaaS', value: 'saas' },
-          { title: 'Market News', value: 'market_news' },
-          { title: 'Platform Update', value: 'platform_update' },
-          { title: 'Private Equity', value: 'private_equity' }
+          { title: 'Technology', value: 'Technology' },
+          { title: 'Finance', value: 'Finance' },
+          { title: 'Healthcare', value: 'Healthcare' },
+          { title: 'AI & ML', value: 'AI & ML' },
+          { title: 'Green Energy', value: 'Green Energy' },
+          { title: 'SaaS', value: 'SaaS' },
+          { title: 'Market News', value: 'Market News' },
+          { title: 'Platform Update', value: 'Platform Update' },
+          { title: 'Private Equity', value: 'Private Equity' }
         ]
       }
     },

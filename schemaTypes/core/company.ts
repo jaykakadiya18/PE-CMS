@@ -110,18 +110,18 @@ export default {
       group: 'basic',
       options: {
         list: [
-          { title: 'Tech', value: 'tech' },
-          { title: 'Finance', value: 'finance' },
-          { title: 'AI/ML', value: 'ai_ml' },
-          { title: 'Healthcare', value: 'healthcare' },
-          { title: 'Green Energy', value: 'green_energy' },
-          { title: 'SaaS', value: 'saas' },
-          { title: 'Space', value: 'space' },
-          { title: 'AI', value: 'ai' },
-          { title: 'Software', value: 'software' },
-          { title: 'Gaming', value: 'gaming' },
-          { title: 'Messaging', value: 'messaging' },
-          { title: 'Communities', value: 'communities' }
+          { title: 'Tech', value: 'Tech' },
+          { title: 'Finance', value: 'Finance' },
+          { title: 'AI/ML', value: 'AI/ML' },
+          { title: 'Healthcare', value: 'Healthcare' },
+          { title: 'Green Energy', value: 'Green Energy' },
+          { title: 'SaaS', value: 'SaaS' },
+          { title: 'Space', value: 'Space' },
+          { title: 'AI', value: 'AI' },
+          { title: 'Software', value: 'Software' },
+          { title: 'Gaming', value: 'Gaming' },
+          { title: 'Messaging', value: 'Messaging' },
+          { title: 'Communities', value: 'Communities' }
         ]
       },
       validation: (Rule: any) => Rule.required()
@@ -198,6 +198,36 @@ export default {
       type: 'boolean',
       group: 'basic',
       initialValue: false
+    },
+    // Add this field right after the 'isFeatured' field in the BASIC INFORMATION section
+    {
+      name: 'featureTag',
+      title: 'Feature Tag',
+      type: 'string',
+      group: 'basic',
+      options: {
+        list: [
+          { title: 'High Demand', value: 'High Demand' },
+          { title: 'New Offering', value: 'New Offering' },
+          { title: 'Coming Soon', value: 'Coming Soon' },
+          { title: 'Limited Time', value: 'Limited Time' },
+          { title: 'Exclusive', value: 'Exclusive' },
+          { title: 'Hot', value: 'Hot' },
+          { title: 'Trending', value: 'Trending' },
+          { title: 'Closed', value: 'Closed' }
+        ]
+      },
+      hidden: ({ document }: any) => !document?.isFeatured,
+      description: 'Select a feature tag for this asset (only visible when Featured Asset is enabled)',
+      validation: (Rule: any) => Rule.custom((value: any, context: any) => {
+        const document = context.document;
+        const isFeatured = document?.isFeatured;
+        
+        if (isFeatured && !value) {
+          return 'Feature tag is required when asset is marked as featured';
+        }
+        return true;
+      })
     },
     {
       name: 'scheduledPublishTime',
@@ -287,6 +317,18 @@ export default {
         return marketType === 'secondary' || !enabled;
       },
       description: 'Internal price used for calculations, not shown to users'
+    },
+    {
+      name: 'fundingDeadlineDate',
+      title: 'Funding Deadline Date',
+      type: 'datetime',
+      group: 'primary',
+      hidden: ({ document }: any) => {
+        const marketType = document?.marketType;
+        const enabled = document?.primaryMarketEnabled;
+        return marketType === 'secondary' || !enabled;
+      },
+      description: 'Final deadline for funding participation in the primary market offering'
     },
     {
       name: 'totalShares',
@@ -961,14 +1003,14 @@ export default {
         type: 'string',
         options: {
           list: [
-            { title: 'High Demand', value: 'high_demand' },
-            { title: 'New Offering', value: 'new_offering' },
-            { title: 'Coming Soon', value: 'coming_soon' },
-            { title: 'Limited Time', value: 'limited_time' },
-            { title: 'Exclusive', value: 'exclusive' },
-            { title: 'Hot', value: 'hot' },
-            { title: 'Trending', value: 'trending' },
-            { title: 'Closed', value: 'closed' }
+            { title: 'High Demand', value: 'High Demand' },
+            { title: 'New Offering', value: 'New Offering' },
+            { title: 'Coming Soon', value: 'Coming Soon' },
+            { title: 'Limited Time', value: 'Limited Time' },
+            { title: 'Exclusive', value: 'Exclusive' },
+            { title: 'Hot', value: 'Hot' },
+            { title: 'Trending', value: 'Trending' },
+            { title: 'Closed', value: 'Closed' }
           ]
         }
       }]
